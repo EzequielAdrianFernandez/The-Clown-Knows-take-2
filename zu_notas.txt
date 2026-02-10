@@ -36,6 +36,9 @@ CLOWN_KNOWS_TAKE_2/
     ├── opciones.png 
     ├── seleccion_usuario.png 
     ├── tienda_medallas.png
+├──lfs/
+    ├── .gitattributes
+    ├── git-lfs-windows-v3.7.1.exe
 
 es un proyecto en donde los archivos que ves ya estan escritos y nececitan correcion y/o implementacion de cosas , en este caso voy a poner unas reglas
 

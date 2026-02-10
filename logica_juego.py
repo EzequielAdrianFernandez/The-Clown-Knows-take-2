@@ -3,6 +3,8 @@ import json
 import csv
 import time
 
+from menu_definiciones import MENU_PRINCIPAL
+
 def cargar_preguntas_desde_csv(ruta_csv):
     """Carga las preguntas desde CSV a la estructura del juego"""
     preguntas = {}
@@ -442,4 +444,78 @@ def verificar_respuesta_VoF(config, opcion_seleccionada):
         config["tickets_ronda"] = 0
 
     config["contesto"] = True
+
+###############GESTION DE USUARIOS##############
+def crear_usuario_nuevo(usuarios, slot_numero, nombre_usuario):
+    """
+    Crea un nuevo usuario en un slot específico.
+    
+    Args:
+        usuarios (dict): Diccionario de usuarios existente
+        slot_numero (int): Número de slot (1-10)
+        nombre_usuario (str): Nombre del nuevo usuario
+    
+    Returns:
+        dict: Usuarios actualizados
+    """
+    usuario_id = f"usuario_{slot_numero}"
+    
+    # Verificar que el slot no esté ocupado
+    if usuario_id in usuarios:
+        print(f"❌ Slot {slot_numero} ya ocupado por: {usuarios[usuario_id]['nombre']}")
+        return usuarios
+    
+    # Crear nuevo usuario
+    usuarios[usuario_id] = {
+        "nombre": nombre_usuario,
+        "record_boletos": 0,
+        "total_boletos": 0,
+        "partidas_jugadas": 0,
+        "tiempo_promedio": 0,
+        "medallas": ""
+    }
+    
+    print(f"✅ Usuario creado: {nombre_usuario} en slot {slot_numero}")
+    return usuarios
+
+def crear_usuario_y_guardar(estado, menu_principal):
+    """
+    Función auxiliar para crear usuario y guardar.
+    Recibe el estado completo y retorna estado actualizado.
+    """
+    # Verificar que tenemos todos los datos necesarios
+    if 'slot_seleccionado' not in estado or estado['slot_seleccionado'] is None:
+        print("❌ Error: No hay slot seleccionado")
+        return estado
+    
+    if 'nombre_nuevo_usuario' not in estado or not estado['nombre_nuevo_usuario']:
+        print("❌ Error: Nombre de usuario vacío")
+        return estado
+    
+    # Crear el nuevo usuario
+    from logica_juego import crear_usuario_nuevo, guardar_json
+    
+    estado['usuarios'] = crear_usuario_nuevo(
+        estado['usuarios'],
+        estado['slot_seleccionado'],
+        estado['nombre_nuevo_usuario']
+    )
+    
+    # Guardar en JSON
+    guardar_json("z_usuarios.json", estado['usuarios'])
+    
+    # Seleccionar usuario automáticamente
+    usuario_id = f"usuario_{estado['slot_seleccionado']}"
+    estado['usuario_actual'] = usuario_id
+    
+    # Volver al menú principal
+    estado['estado_actual'] = "menu_principal"
+    estado['diccionario_botones_actual'] = menu_principal
+    
+    # Limpiar datos temporales
+    estado['nombre_nuevo_usuario'] = ""
+    estado['slot_seleccionado'] = None
+    
+    print(f"✅ Usuario '{estado['usuarios'][usuario_id]['nombre']}' creado y seleccionado")
+    return estado
 

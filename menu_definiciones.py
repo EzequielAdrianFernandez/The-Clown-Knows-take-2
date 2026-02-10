@@ -54,17 +54,11 @@ MENU_CREAR_USUARIO = {
     'boton_volver': {'x': 400, 'y': 470, 'ancho': 200, 'alto': 50, 'texto': 'VOLVER', 'color_normal': (180, 70, 70)}
 }
 
-MENU_CONFIRMAR_CREACION = {
-    'boton_crear': {'x': 300, 'y': 350, 'ancho': 200, 'alto': 50, 'texto': 'CREAR USUARIO', 'color_normal': (100, 180, 100)},
-    'boton_cancelar': {'x': 500, 'y': 350, 'ancho': 200, 'alto': 50, 'texto': 'CANCELAR', 'color_normal': (180, 70, 70)}
-}
-
 # Menús para el modo Opciones #
 MENU_OPCIONES = {
-    'boton_sonido': {'x': 400, 'y': 200, 'ancho': 200, 'alto': 50, 'texto': 'SONIDO: ON', 'color_normal': (100, 180, 100)},
-    'boton_dificultad': {'x': 400, 'y': 270, 'ancho': 200, 'alto': 50, 'texto': 'DIFICULTAD', 'color_normal': (70, 130, 180)},
-    'boton_video': {'x': 400, 'y': 340, 'ancho': 200, 'alto': 50, 'texto': 'VIDEO', 'color_normal': (70, 130, 180)},
-    'boton_volver': {'x': 400, 'y': 410, 'ancho': 200, 'alto': 50, 'texto': 'VOLVER', 'color_normal': (180, 70, 70)}
+    'boton_sonido': {'x': 280, 'y': 200, 'ancho': 200, 'alto': 100, 'texto': 'SONIDO: ON', 'color_normal': (100, 180, 100)},
+    'boton_video': {'x': 520, 'y': 200, 'ancho': 200, 'alto': 100, 'texto': 'VIDEO', 'color_normal': (70, 130, 180)},
+    'boton_volver': {'x': 400, 'y': 350, 'ancho': 200, 'alto': 50, 'texto': 'VOLVER', 'color_normal': (180, 70, 70)}
 }
 
 # Menús para el modo Multiple Choice #

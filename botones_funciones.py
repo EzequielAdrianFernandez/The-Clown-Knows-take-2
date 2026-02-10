@@ -14,7 +14,9 @@ def _calcular_color_hover(color_normal):
 
 def _crear_rectangulo_boton(boton_data):
     """Crea el rectángulo para un botón si no existe"""
-    if boton_data.get('rect') is None:###################################################################MARCADOR DE GET
+    rect_existe = 'rect' in boton_data and boton_data['rect'] is not None
+    
+    if not rect_existe:
         return pygame.Rect(
             boton_data['x'], 
             boton_data['y'], 
@@ -22,11 +24,6 @@ def _crear_rectangulo_boton(boton_data):
             boton_data['alto']
         )
     return boton_data['rect']
-
-def _verificar_colision_y_clic(rect, mouse_pos, eventos):
-    """Verifica solo colisión (la lógica de clic ahora está en procesar_botones)"""
-    tiene_colision = rect.collidepoint(mouse_pos)
-    return tiene_colision
 
 def procesar_botones(pantalla, fuente, eventos, diccionario_botones):
     mouse_pos = pygame.mouse.get_pos()
@@ -71,7 +68,7 @@ def procesar_botones(pantalla, fuente, eventos, diccionario_botones):
         # Actualizar estado del botón
         botones_actualizados[boton_id]['rect'] = rect
         botones_actualizados[boton_id]['color_actual'] = color_actual
-        botones_actualizados[boton_id]['presionado'] = fue_presionado
+        botones_actualizados[boton_id]['presionado'] = fue_presionado  # Solo True si fue_presionado
     
     return botones_actualizados
 
@@ -101,3 +98,10 @@ def dibujar_botones(pantalla, fuente, diccionario_botones):
         texto_surface = fuente.render(boton_data['texto'], True, (255, 255, 255))
         texto_rect = texto_surface.get_rect(center=boton_data['rect'].center)
         pantalla.blit(texto_surface, texto_rect)
+
+'''
+def _verificar_colision_y_clic(rect, mouse_pos, eventos):
+    """Verifica solo colisión (la lógica de clic ahora está en procesar_botones)"""
+    tiene_colision = rect.collidepoint(mouse_pos)
+    return tiene_colision
+'''

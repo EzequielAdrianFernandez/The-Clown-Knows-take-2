@@ -12,7 +12,7 @@ from manejador_estados import (
     cargar_fuentes,
 )
 from menu_definiciones import FONDOS  # Importar los fondos
-from y_musica import musica_inicializar, dibujar_musica_pantalla , musica_actualizar_completo
+from y_musica import musica_inicializar, dibujar_musica_pantalla , musica_actualizar_completo #funciones de musica
 
 def main():
     # Configuración

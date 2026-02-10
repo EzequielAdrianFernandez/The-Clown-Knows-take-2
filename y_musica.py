@@ -75,23 +75,11 @@ def toggle_mute_con_guardado(estado):
 
 def musica_actualizar_completo(eventos, estado_juego, forzar_actualizacion=False):
     """
-    Función completa para actualizar el estado de música.
-    Solo responde a la tecla M (mute).
+    Función simplificada - ya no responde a teclas
     """
-    estado_modificado = False
-    
-    # CONTROL DE MÚSICA CON TECLAS - SOLO M
-    for evento in eventos:
-        if evento.type == pygame.KEYDOWN:
-            # Tecla M para mute/unmute (ÚNICA tecla de audio)
-            if evento.key == pygame.K_m:
-                estado_juego = toggle_mute_con_guardado(estado_juego)
-                estado_modificado = True
-                print("🔇 Tecla M presionada - mute toggled")
-            # NO responder a tecla P
-    
-    # Actualizar música según estado si hubo cambio
-    if estado_modificado or forzar_actualizacion:
+    # Ya no hay control por tecla M aquí
+    # Solo actualiza si se fuerza
+    if forzar_actualizacion:
         from manejador_estados import actualizar_musica_segun_estado
         estado_juego = actualizar_musica_segun_estado(estado_juego)
     

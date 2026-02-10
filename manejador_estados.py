@@ -1,9 +1,9 @@
 from verificaciones_botones import obtener_botones_presionados, procesar_todas_acciones
 from botones_funciones import procesar_botones, dibujar_botones
-from logica_juego import (cargar_preguntas_desde_csv, cargar_preguntas_VoF_desde_csv, cargar_configuraciones, cargar_usuarios, actualizar_estadisticas_usuario,determinar_dificultad_y_tickets, determinar_dificultad_y_tickets_VoF,seleccionar_pregunta, seleccionar_pregunta_VoF, randomizar_respuestas,verificar_respuesta, verificar_respuesta_VoF, acreditar_tickets_ronda,remover_pregunta_usada, reestablecer_configuraciones,remover_pregunta_usada_VoF)
-from menu_definiciones import (MENU_PRINCIPAL, MENU_JUEGO_PREGUNTA, MENU_RESULTADO_RONDA, MENU_RESULTADO_FINAL, MENU_SELECCION_USUARIO, MENU_CREAR_USUARIO, MENU_CONFIRMAR_CREACION, MENU_JUEGO_PREGUNTA_VoF, MENU_RESULTADO_RONDA_VoF, MENU_RESULTADO_FINAL_VoF,MENU_LABERINTO_RESULTADO,MENU_LABERINTO_JUEGO,MENU_TIENDA)
+from logica_juego import (cargar_preguntas_desde_csv, cargar_preguntas_VoF_desde_csv, cargar_configuraciones, cargar_usuarios, actualizar_estadisticas_usuario, determinar_dificultad_y_tickets, determinar_dificultad_y_tickets_VoF, seleccionar_pregunta, seleccionar_pregunta_VoF, randomizar_respuestas, verificar_respuesta, verificar_respuesta_VoF, acreditar_tickets_ronda, remover_pregunta_usada, reestablecer_configuraciones, remover_pregunta_usada_VoF, crear_usuario_y_guardar)
+from menu_definiciones import (MENU_PRINCIPAL, MENU_JUEGO_PREGUNTA, MENU_RESULTADO_RONDA, MENU_RESULTADO_FINAL, MENU_SELECCION_USUARIO, MENU_CREAR_USUARIO, MENU_JUEGO_PREGUNTA_VoF, MENU_RESULTADO_RONDA_VoF, MENU_RESULTADO_FINAL_VoF,MENU_LABERINTO_RESULTADO,MENU_LABERINTO_JUEGO,MENU_TIENDA)
 from laberinto_espejos import iniciar_juego_laberinto
-
+from leaderboard import dibujar_leaderboard_organizado
 
 import pygame
 import time
@@ -99,36 +99,40 @@ def crear_estado_inicial():
 
 def actualizar_estado_completo(pantalla, fuente, eventos, estado):
     """
-    Actualiza todo el estado del juego
+    Actualiza todo el estado del juego - VERSIÓN CORREGIDA
     """
-    # Procesar interacciones de botones
-    estado['diccionario_botones_actual'] = procesar_botones(
-        pantalla, fuente, eventos, estado['diccionario_botones_actual']
-    )
-    
-    # Obtener botones presionados
-    botones_presionados = obtener_botones_presionados(estado['diccionario_botones_actual'])
-    
     # INICIALIZAR BOTONES DE TIENDA SI ES NECESARIO
     if estado['estado_actual'] == "tienda" and estado['diccionario_botones_actual'] == MENU_TIENDA:
         estado['diccionario_botones_actual'] = crear_botones_tienda_dinamicos(estado)
     
-    # Obtener botones presionados
+    # 1. Procesar interacciones de botones (marca botones como presionados ESTE frame)
+    estado['diccionario_botones_actual'] = procesar_botones(
+        pantalla, fuente, eventos, estado['diccionario_botones_actual']
+    )
+    
+    # 2. Obtener botones presionados (sin resetear aún)
     botones_presionados = obtener_botones_presionados(estado['diccionario_botones_actual'])
     
-    # Manejar lógica específica del estado actual
+    # 3. Manejar lógica específica del estado actual CON los botones presionados
     estado = manejar_logica_estado_actual(estado, botones_presionados, eventos)
     
-    # Procesar acciones y cambiar estado si es necesario
+    # 4. Procesar acciones y cambiar estado si es necesario (navegación simple)
     nuevo_estado, nuevo_diccionario = procesar_todas_acciones(
         botones_presionados, 
         estado['estado_actual'], 
         estado['diccionario_botones_actual']
     )
     
-    # Actualizar estado
+    # 5. Actualizar estado
     estado['estado_actual'] = nuevo_estado
     estado['diccionario_botones_actual'] = nuevo_diccionario
+    
+    # 6. IMPORTANTE: AHORA SÍ resetear todos los botones a no presionados
+    #    después de que toda la lógica los haya procesado
+    claves_botones = list(estado['diccionario_botones_actual'].keys())
+    for i in range(len(claves_botones)):
+        boton_id = claves_botones[i]
+        estado['diccionario_botones_actual'][boton_id]['presionado'] = False
     
     return estado
 
@@ -155,7 +159,6 @@ def cargar_fuentes():
     return fuente
 
 #=== DIBUJO DEL PANTALLA === 
-
 def dibujar_texto_centrado(pantalla, fuente, texto, x, y, color):
     """Dibuja texto centrado horizontalmente en la posición x"""
     if texto:  # Solo dibujar si el texto no está vacío
@@ -169,7 +172,6 @@ def dibujar_texto(pantalla, fuente, texto, x, y, color):
         texto_surface = fuente.render(texto, True, color)
         texto_rect = texto_surface.get_rect(topleft=(x, y))
         pantalla.blit(texto_surface, texto_rect)
-
 
 def dibujar_estado_actual(pantalla, fuente, estado):
     """
@@ -363,6 +365,14 @@ def dibujar_estado_actual(pantalla, fuente, estado):
                     dibujar_texto_centrado(pantalla, fuente, f"Slot {i}", centro_x, texto_y, (150, 150, 150))
                     dibujar_texto_centrado(pantalla, fuente, "[VACÍO]", centro_x, texto_y + 25, (100, 100, 100))
                     dibujar_texto_centrado(pantalla, fuente, "➕", centro_x, texto_y + 50, (100, 200, 100))
+
+        case "crear_usuario":
+            dibujar_texto_centrado(pantalla, fuente, f"CREAR USUARIO EN SLOT {estado['slot_seleccionado']}", 500, 100, (255, 255, 255))
+            dibujar_texto_centrado(pantalla, fuente, "Ingresa tu nombre:", 500, 150, (200, 200, 200))
+            dibujar_texto_centrado(pantalla, fuente, estado['nombre_nuevo_usuario'], 500, 200, (255, 255, 0))
+            dibujar_texto_centrado(pantalla, fuente, "Presiona ENTER o haz clic en CONFIRMAR", 500, 250, (150, 150, 150))
+            dibujar_botones(pantalla, fuente, estado['diccionario_botones_actual'])
+
         #=== LABERINTO ===
         case "seleccion_dificultad_laberinto":
             dibujar_texto_centrado(pantalla, fuente, "SELECCIONAR DIFICULTAD LABERINTO", 500, 100, (255, 255, 255))
@@ -415,63 +425,20 @@ def dibujar_estado_actual(pantalla, fuente, estado):
 
         #=== LEADERBOARD ===
         case "leaderboard":
-            dibujar_texto_centrado(pantalla, fuente, "🏆 LEADERBOARD 🏆", 500, 50, (255, 255, 0))
+            dibujar_leaderboard_organizado(pantalla, fuente, estado, 10, 490)
+
+        case "opciones":
+            # Actualizar texto del botón según estado actual
+            if estado['musica_mute']:
+                estado['diccionario_botones_actual']['boton_sonido']['texto'] = 'SONIDO: OFF'
+                estado['diccionario_botones_actual']['boton_sonido']['color_normal'] = (180, 70, 70)  # Rojo cuando OFF
+            else:
+                estado['diccionario_botones_actual']['boton_sonido']['texto'] = 'SONIDO: ON'
+                estado['diccionario_botones_actual']['boton_sonido']['color_normal'] = (100, 180, 100)  # Verde cuando ON
             
-            # Obtener ambos leaderboards
-            from logica_juego import obtener_leaderboard_record, obtener_leaderboard_total
-            
-            leaderboard_record = obtener_leaderboard_record(estado['usuarios'], limite=5)
-            leaderboard_total = obtener_leaderboard_total(estado['usuarios'], limite=5)
-            
-            # Título RECORD
-            dibujar_texto_centrado(pantalla, fuente, "MEJOR PARTIDA INDIVIDUAL", 250, 100, (255, 200, 100))
-            
-            # Mostrar leaderboard de RECORD
-            for i, (nombre, record, total, partidas, medallas, usuario_id) in enumerate(leaderboard_record):
-                y_pos = 140 + i * 40
-                
-                # Posición
-                dibujar_texto(pantalla, fuente, f"{i+1}.", 100, y_pos, (255, 255, 255))
-                
-                # Nombre y emojis
-                nombre_texto = f"{nombre[:12]} {medallas}"
-                dibujar_texto(pantalla, fuente, nombre_texto, 140, y_pos, (200, 200, 255))
-                
-                # Record
-                dibujar_texto(pantalla, fuente, f"{record} tickets", 350, y_pos, (255, 255, 0))
-                
-                # Partidas jugadas
-                dibujar_texto(pantalla, fuente, f"({partidas} partidas)", 450, y_pos, (150, 150, 150))
-            
-            # Título TOTAL
-            dibujar_texto_centrado(pantalla, fuente, "TOTAL ACUMULADO", 750, 100, (255, 200, 100))
-            
-            # Mostrar leaderboard de TOTAL
-            for i, (nombre, total, record, partidas, medallas, usuario_id) in enumerate(leaderboard_total):
-                y_pos = 140 + i * 40
-                
-                # Posición
-                dibujar_texto(pantalla, fuente, f"{i+1}.", 600, y_pos, (255, 255, 255))
-                
-                # Nombre y emojis
-                nombre_texto = f"{nombre[:12]} {medallas}"
-                dibujar_texto(pantalla, fuente, nombre_texto, 640, y_pos, (200, 200, 255))
-                
-                # Total
-                dibujar_texto(pantalla, fuente, f"{total} tickets", 850, y_pos, (100, 255, 100))
-                
-                # Mejor partida
-                dibujar_texto(pantalla, fuente, f"Mejor: {record}", 950, y_pos, (255, 200, 100))
-            
-            # Si no hay suficientes usuarios
-            if len(leaderboard_record) == 0:
-                dibujar_texto_centrado(pantalla, fuente, "¡Aún no hay jugadores con partidas!", 500, 350, (255, 100, 100))
-            
-            # Instrucciones
-            dibujar_texto_centrado(pantalla, fuente, "Juega más partidas para subir en el ranking!", 500, 550, (200, 200, 200))
+            dibujar_botones(pantalla, fuente, estado['diccionario_botones_actual'])
 
 #=== MANEJADOR PRINCIPAL DE LÓGICA DE ESTADOS ===#
-
 def manejar_logica_estado_actual(estado, botones_presionados, eventos):
     """Maneja la lógica específica de cada estado"""
     
@@ -491,7 +458,7 @@ def manejar_logica_estado_actual(estado, botones_presionados, eventos):
                 # Si no hay usuario, cambiar a selección de usuario
                 estado['estado_actual'] = "seleccion_usuario"
                 estado['diccionario_botones_actual'] = MENU_SELECCION_USUARIO
-        
+
         case "juego_pregunta":
             # Lógica para Multiple Choice (existente)
             if not estado['juego_iniciado']:
@@ -592,7 +559,6 @@ def manejar_logica_estado_actual(estado, botones_presionados, eventos):
                 estado['juego_iniciado'] = False
                 estado['ronda_actual'] = 1
                 estado['modo_juego'] = None
-
 
         case "juego_pregunta_VoF":
             #Lógica para Verdadero o Falso
@@ -713,10 +679,11 @@ def manejar_logica_estado_actual(estado, botones_presionados, eventos):
                 estado['ronda_actual'] = 1
                 estado['modo_juego'] = None
 
+# === SELECCIÓN DE USUARIO ===
 
         case "seleccion_usuario":
             # Manejar selección de usuario existente o slot vacío
-            for i in range(1, 11):  # Para 10 usuarios posibles
+            for i in range(1, 11):
                 boton_id = f'boton_usuario_{i}'
                 if boton_id in botones_presionados:
                     usuario_id = f'usuario_{i}'
@@ -725,94 +692,81 @@ def manejar_logica_estado_actual(estado, botones_presionados, eventos):
                         estado['usuario_actual'] = usuario_id
                         estado['estado_actual'] = "menu_principal"
                         estado['diccionario_botones_actual'] = MENU_PRINCIPAL
+                        print(f"✅ Usuario seleccionado: {estado['usuarios'][usuario_id]['nombre']}")
                     else:
-                        # Slot vacío, mostrar confirmación de creación
+                        # Slot vacío, ir DIRECTAMENTE a crear usuario
                         estado['slot_seleccionado'] = i
-                        estado['mostrando_confirmacion_creacion'] = True
-                        estado['estado_actual'] = "confirmar_creacion"
-                        estado['diccionario_botones_actual'] = MENU_CONFIRMAR_CREACION
+                        estado['nombre_nuevo_usuario'] = ""  # Resetear nombre
+                        estado['estado_actual'] = "crear_usuario"
+                        estado['diccionario_botones_actual'] = MENU_CREAR_USUARIO
+                        print(f"📝 Creando usuario en slot {i}")
                     break
             
-            # Botón volver
             if 'boton_volver' in botones_presionados:
                 estado['estado_actual'] = "menu_principal"
                 estado['diccionario_botones_actual'] = MENU_PRINCIPAL
 
-        case "confirmar_creacion":
-            # Manejar confirmación para crear usuario en slot vacío
-            if 'boton_crear' in botones_presionados:
-                estado['estado_actual'] = "crear_usuario"
-                estado['diccionario_botones_actual'] = MENU_CREAR_USUARIO
-                estado['nombre_nuevo_usuario'] = ""
-            
-            if 'boton_cancelar' in botones_presionados:
-                estado['estado_actual'] = "seleccion_usuario"
-                estado['diccionario_botones_actual'] = MENU_SELECCION_USUARIO
-                estado['slot_seleccionado'] = None
-                estado['mostrando_confirmacion_creacion'] = False
-
         case "crear_usuario":
-            # Manejar entrada de texto para nombre de usuario
+            # Importar la función aquí
+            from logica_juego import crear_usuario_y_guardar
+            
+            # 1. Capturar entrada de texto
             for evento in eventos:
                 if evento.type == pygame.KEYDOWN:
                     if evento.key == pygame.K_RETURN and estado['nombre_nuevo_usuario']:
-                        # Crear usuario con el nombre ingresado en el slot seleccionado
-                        usuario_id = f"usuario_{estado['slot_seleccionado']}"
-                        estado['usuarios'][usuario_id] = {
-                            "nombre": estado['nombre_nuevo_usuario'],
-                            "record_boletos": 0,
-                            "total_boletos": 0,
-                            "partidas_jugadas": 0,
-                            "tiempo_promedio": 0,
-                            "medallas": ""
-                        }
-                        from logica_juego import guardar_json
-                        guardar_json("z_usuarios.json", estado['usuarios'])
-                        
-                        estado['usuario_actual'] = usuario_id
-                        estado['estado_actual'] = "menu_principal"
-                        estado['diccionario_botones_actual'] = MENU_PRINCIPAL
-                        estado['nombre_nuevo_usuario'] = ""
-                        estado['slot_seleccionado'] = None
-                        estado['mostrando_confirmacion_creacion'] = False
+                        # Enter para confirmar
+                        estado = crear_usuario_y_guardar(estado, MENU_PRINCIPAL)
                     elif evento.key == pygame.K_BACKSPACE:
                         estado['nombre_nuevo_usuario'] = estado['nombre_nuevo_usuario'][:-1]
-                    else:
-                        # Agregar caracter al nombre (solo letras y números)
-                        if evento.unicode.isalnum() or evento.unicode == ' ':
-                            if len(estado['nombre_nuevo_usuario']) < 15:  # Limitar longitud
-                                estado['nombre_nuevo_usuario'] += evento.unicode
+                    elif evento.unicode.isalnum() or evento.unicode == ' ':
+                        if len(estado['nombre_nuevo_usuario']) < 15:
+                            estado['nombre_nuevo_usuario'] += evento.unicode
             
-            # Botón confirmar
+            # 2. Botón confirmar
             if 'boton_confirmar' in botones_presionados and estado['nombre_nuevo_usuario']:
-                usuario_id = f"usuario_{estado['slot_seleccionado']}"
-                estado['usuarios'][usuario_id] = {
-                    "nombre": estado['nombre_nuevo_usuario'],
-                    "record_boletos": 0,
-                    "total_boletos": 0,
-                    "partidas_jugadas": 0,
-                    "tiempo_promedio": 0,
-                    "medallas": ""
-                }
-                from logica_juego import guardar_json
-                guardar_json("z_usuarios.json", estado['usuarios'])
-                
-                estado['usuario_actual'] = usuario_id
-                estado['estado_actual'] = "menu_principal"
-                estado['diccionario_botones_actual'] = MENU_PRINCIPAL
-                estado['nombre_nuevo_usuario'] = ""
-                estado['slot_seleccionado'] = None
-                estado['mostrando_confirmacion_creacion'] = False
+                estado = crear_usuario_y_guardar(estado, MENU_PRINCIPAL)
             
-            # Botón volver
+            # 3. Botón volver
             if 'boton_volver' in botones_presionados:
                 estado['estado_actual'] = "seleccion_usuario"
                 estado['diccionario_botones_actual'] = MENU_SELECCION_USUARIO
                 estado['nombre_nuevo_usuario'] = ""
                 estado['slot_seleccionado'] = None
-                estado['mostrando_confirmacion_creacion'] = False
 
-                        # ======================================= PARA LABERINTO ===================================================
+        case "crear_usuario":
+            from logica_juego import crear_usuario_y_guardar
+            
+            # 1. Capturar entrada de texto
+            for evento in eventos:
+                if evento.type == pygame.KEYDOWN:
+                    # Tecla ENTER
+                    if evento.key == pygame.K_RETURN and estado['nombre_nuevo_usuario']:
+                        estado = crear_usuario_y_guardar(estado, MENU_PRINCIPAL)
+                    
+                    # Tecla BACKSPACE
+                    elif evento.key == pygame.K_BACKSPACE:
+                        # Solo si hay caracteres para borrar
+                        if estado['nombre_nuevo_usuario']:
+                            estado['nombre_nuevo_usuario'] = estado['nombre_nuevo_usuario'][:-1]
+                    
+                    # Caracteres alfanuméricos - IMPORTANTE: verificar que evento.unicode tenga valor
+                    elif evento.unicode:  # Esto filtra repeticiones automáticas
+                        if (evento.unicode.isalnum() or evento.unicode == ' ') and len(estado['nombre_nuevo_usuario']) < 15:
+                            estado['nombre_nuevo_usuario'] += evento.unicode
+            
+            # 2. Botón confirmar
+            if 'boton_confirmar' in botones_presionados and estado['nombre_nuevo_usuario']:
+                estado = crear_usuario_y_guardar(estado, MENU_PRINCIPAL)
+            
+            # 3. Botón volver
+            if 'boton_volver' in botones_presionados:
+                estado['estado_actual'] = "seleccion_usuario"
+                estado['diccionario_botones_actual'] = MENU_SELECCION_USUARIO
+                estado['nombre_nuevo_usuario'] = ""
+                estado['slot_seleccionado'] = None
+
+# ======================================= PARA LABERINTO ===================================================
+
         case "seleccion_dificultad_laberinto":
             # Manejar selección de dificultad CUANDO SE PRESIONAN BOTONES
             # Usar variable de control en vez de break
@@ -965,6 +919,21 @@ def manejar_logica_estado_actual(estado, botones_presionados, eventos):
                                     # ACTUALIZAR BOTONES después de compra exitosa
                                     if exito:
                                         estado['diccionario_botones_actual'] = crear_botones_tienda_dinamicos(estado)
+
+        case "leaderboard":
+            if 'boton_volver' in botones_presionados:
+                estado['estado_actual'] = "menu_principal"
+                estado['diccionario_botones_actual'] = MENU_PRINCIPAL
+
+        case "opciones":
+            if 'boton_sonido' in botones_presionados:
+                # Llamar a la función de toggle_mute
+                from y_musica import toggle_mute_con_guardado
+                estado = toggle_mute_con_guardado(estado)
+            
+            if 'boton_volver' in botones_presionados:
+                estado['estado_actual'] = "menu_principal"
+                estado['diccionario_botones_actual'] = MENU_PRINCIPAL
 
     return estado
 
