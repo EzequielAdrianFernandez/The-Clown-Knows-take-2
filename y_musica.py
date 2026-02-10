@@ -1,0 +1,120 @@
+# y_musica.py
+import pygame
+import os
+from logica_juego import guardar_json
+
+def musica_inicializar():
+    """Inicializa el sistema de audio de pygame"""
+    pygame.mixer.init()
+
+def musica_cargar_y_reproducir(nombre_archivo, volumen=0.5):
+    """
+    Carga y reproduce una música automáticamente.
+    """
+    # Primero intentar con .mp3
+    ruta_mp3 = f"musica/{nombre_archivo}.mp3"
+    ruta_wav = f"musica/{nombre_archivo}.wav"
+    
+    if os.path.exists(ruta_mp3):
+        ruta = ruta_mp3
+    elif os.path.exists(ruta_wav):
+        ruta = ruta_wav
+    else:
+        print(f"❌ No se encontró: {nombre_archivo}.mp3 ni {nombre_archivo}.wav")
+        return False
+    
+    try:
+        pygame.mixer.music.load(ruta)
+        pygame.mixer.music.play(-1)  # SIEMPRE reproducir
+        pygame.mixer.music.set_volume(volumen)
+        print(f"🎵 Música cargada: {os.path.basename(ruta)}")
+        return True
+    except Exception as e:
+        print(f"❌ Error al cargar {ruta}: {e}")
+        return False
+
+def musica_actualizar_volumen(volumen):
+    pygame.mixer.music.set_volume(volumen)
+
+def guardar_configuracion_audio(configuraciones, estado_audio):
+    """
+    Guarda la configuración de audio en el JSON.
+    SOLO mute y volumen.
+    """
+    configuraciones["audio_mute"] = estado_audio["mute"]
+    configuraciones["audio_volumen"] = estado_audio["volumen"]
+    # NO guardar "audio_reproduciendo"
+    
+    guardar_json("z_configuraciones.json", configuraciones)
+    print(f"💾 Audio guardado: mute={estado_audio['mute']}, vol={estado_audio['volumen']}")
+
+def toggle_mute_con_guardado(estado):
+    """
+    Alterna mute y guarda la configuración.
+    ÚNICA función de control de audio.
+    """
+    nuevo_estado = estado.copy()
+    nuevo_estado['musica_mute'] = not nuevo_estado['musica_mute']
+    
+    # Aplicar mute
+    if nuevo_estado['musica_mute']:
+        musica_actualizar_volumen(0.0)
+        print("🔇 MUTE activado")
+    else:
+        musica_actualizar_volumen(nuevo_estado['musica_volumen'])
+        print("🔊 UNMUTE activado")
+    
+    # Guardar configuración (SOLO mute y volumen)
+    estado_audio = {
+        "mute": nuevo_estado['musica_mute'],
+        "volumen": nuevo_estado['musica_volumen']
+    }
+    guardar_configuracion_audio(nuevo_estado['configuraciones'], estado_audio)
+    
+    return nuevo_estado
+
+def musica_actualizar_completo(eventos, estado_juego, forzar_actualizacion=False):
+    """
+    Función completa para actualizar el estado de música.
+    Solo responde a la tecla M (mute).
+    """
+    estado_modificado = False
+    
+    # CONTROL DE MÚSICA CON TECLAS - SOLO M
+    for evento in eventos:
+        if evento.type == pygame.KEYDOWN:
+            # Tecla M para mute/unmute (ÚNICA tecla de audio)
+            if evento.key == pygame.K_m:
+                estado_juego = toggle_mute_con_guardado(estado_juego)
+                estado_modificado = True
+                print("🔇 Tecla M presionada - mute toggled")
+            # NO responder a tecla P
+    
+    # Actualizar música según estado si hubo cambio
+    if estado_modificado or forzar_actualizacion:
+        from manejador_estados import actualizar_musica_segun_estado
+        estado_juego = actualizar_musica_segun_estado(estado_juego)
+    
+    return estado_juego
+
+def dibujar_musica_pantalla(pantalla, fuente, estado_juego, ALTO_PANTALLA):
+    """
+    Dibuja información de música en pantalla.
+    SOLO muestra estado de mute.
+    """
+    mute_texto = "🔇 SILENCIADO" if estado_juego['musica_mute'] else "🔊 SONANDO"
+    musica_texto = estado_juego['musica_actual'].upper()
+    
+    # Texto de estado de música
+    texto_musica = fuente.render(
+        f"Música: {musica_texto}", 
+        True, (200, 200, 255)
+    )
+    pantalla.blit(texto_musica, (10, ALTO_PANTALLA - 60))
+    
+    # Texto de controles (SOLO M)
+    texto_controles = fuente.render(
+        f"{mute_texto} | Control: M (silenciar/sonar)", 
+        True, (200, 200, 200)
+    )
+    pantalla.blit(texto_controles, (10, ALTO_PANTALLA - 30))

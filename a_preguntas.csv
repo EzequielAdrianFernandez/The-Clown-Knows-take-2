@@ -1,0 +1,66 @@
+categoria,dificultad,pregunta,correcta,incorrecta1,incorrecta2,incorrecta3
+biologia,facil,"¿Qué animal puede regenerar sus extremidades si las pierde?","la lagartija","el elefante","el pinguino","la jirafa"
+biologia,facil,"¿Cuál es el órgano más grande del cuerpo humano?","La piel","El corazón","El hígado","El cerebro"
+biologia,facil,"¿Qué fruto tiene sus semillas por fuera?","La fresa","El plátano","La manzana","La naranja"
+biologia,facil,"¿Qué usan los murciélagos para 'ver' en la oscuridad?","Sus oídos","Sus bigotes","Sus alas","Su nariz"
+biologia,facil,"¿Qué tipo de sangre chupa el mosquito al nacer?","Ninguna","Sangre humana","Sangre de vaca","Sangre de otros insectos"
+biologia,facil,¿Cuál es el proceso por el cual las plantas convierten la luz en energía?,Fotosíntesis,Respiración,Transpiración,Digestión
+biologia,facil,¿Qué órgano del cuerpo humano produce insulina?,El páncreas,Hígado,Riñón,Estómago
+biologia,facil,¿Cuál es el elemento químico más abundante en la Tierra?,Oxígeno,Hierro,Cobre,Silicio
+biologia,facil,¿Qué parte de la célula contiene el material genético?,El núcleo,Citoplasma,Mitochondria,Membrana
+biologia,medio,"¿Qué porcentaje de agua tiene un bebé recién nacido?","75-80%","50%","60%","90%"
+biologia,medio,"¿Cuál es el único mamífero que no puede saltar?","el elefante","El rinoceronte","El hipopótamo","La ballena"
+biologia,medio,"¿Qué proteína usan los músculos para contraerse?","Actina y miosina","Queratina","Colágeno","Hemoglobina"
+biologia,medio,"¿Por qué las cebras tienen rayas?","Para confundir a los depredadores","Para atraer pareja","Porque son fanáticas de la moda","Para camuflarse en la nieve"
+biologia,medio,"¿Qué animal tiene huellas dactilares casi iguales a las humanas?","El koala","El delfín","El gorila","El perro"
+biologia,medio,¿Qué tipo de sangre puede recibir un donante universal?,O negativo,O positivo,A positivo,AB negativo
+biologia,medio,¿Cuál es la función principal de los glóbulos rojos?,Transportar oxígeno,Producir anticuerpos,Regular la temperatura,Transportar nutrientes
+biologia,medio,¿Qué estructura del ojo controla la cantidad de luz que entra?,La pupila,La córnea,El iris,La retina
+biologia,medio,¿Cuál es la principal función de las raíces en las plantas?,Absorber agua y nutrientes,Producir semillas,Realizar fotosíntesis,Almacenar azúcares
+biologia,dificil,"¿Qué medusa es 'inmortal' al revertir su envejecimiento?","Turritopsis dohrnii","Medusa melena de león","Medusa caja","Medusa luna"
+biologia,dificil,"¿Cuántos estómagos tiene un pulpo?","tres","uno","dos","cuatro"
+biologia,dificil,"¿Qué planta crece más rápido?","El bambú","El roble","El girasol","La secuoya"
+biologia,dificil,"¿Qué enzima hace brillar a las luciérnagas?","Luciferasa","Amilasa","Catalasa","Lipasa"
+biologia,dificil,"¿Qué animal tiene el cerebro más grande en proporción a su cuerpo?","La hormiga","El humano","El delfín","El chimpancé"
+biologia,dificil,¿Qué proteína es responsable de la contracción muscular?,Actina y miosina,Colágeno,Queratina,Elastina
+biologia,dificil,¿Cuál es el nombre del proceso en el que las células se dividen para formar células hijas?,Mitosis,Meiosis,Fagocitosis,Apoptosis
+biologia,dificil,¿Qué estructura en la célula vegetal almacena agua?,Vacúola central,Cloroplasto,Retículo endoplasmático,Núcleo
+biologia,dificil,¿Qué tipo de organismo realiza la fotosíntesis?,Las plantas,Los animales,Los hongos,Las bacterias
+arte,facil,¿Quién pintó 'La Última Cena'?,Leonardo da Vinci,Pablo Picasso,Vincent van Gogh,Rembrandt
+arte,facil,¿Qué técnica artística consiste en tallar piedra o madera?,Escultura,Grabado,Modelado,Cerámica
+arte,facil,¿Cuál es el color que resulta de mezclar azul y amarillo?,Verde,Anaranjado,Violeta,Rojo
+arte,facil,"¿Quién pintó la famosa obra 'La Mona Lisa'?","Leonardo da Vinci","Pablo Picasso","Vincent van Gogh","Claude Monet"
+arte,facil,"¿Qué técnica utiliza acuarelas?","Pintura con agua y pigmentos","Escultura en mármol","Grabado en madera","Modelado en arcilla"
+arte,facil,"¿Cuál de estos es un tipo de arte visual?","La escultura","La poesía","La danza","La ópera"
+arte,facil,"¿En qué museo se encuentra 'La Noche Estrellada' de Van Gogh?","MoMA","Museo del Louvre","Museo del Prado","Museo Británico"
+arte,medio,"¿Cuál es el verdadero nombre del pintor conocido como 'El Greco'?","Doménikos Theotokópoulos","Giotto di Bondone","Sandro Botticelli","Hieronymus Bosch"
+arte,medio,"¿Qué movimiento artístico fundó Pablo Picasso?","Cubismo","Surrealismo","Impresionismo","Expresionismo"
+arte,medio,"¿Qué pintor español es famoso por su serie de 'Los caprichos'?","Francisco de Goya","Diego Velázquez","Salvador Dalí","Joan Miró"
+arte,medio,¿Qué movimiento artístico se caracteriza por el uso de formas abstractas y colores vivos?,Expresionismo,Impresionismo,Cubismo,Surrealismo
+arte,medio,¿En qué país nació el pintor Salvador Dalí?,España,Italia,Francia,Portugal
+arte,medio,"¿Dónde nació el pintor Edvard Munch?","Noruega","Suecia","Dinamarca","Alemania"
+arte,dificil,"¿Cuál es el nombre completo de la escultora conocida por sus gigantescas arañas de bronce?","Louise Bourgeois","Frida Kahlo","Barbara Hepworth","Georgia O'Keeffe"
+arte,dificil,"¿Qué pintor creó el tríptico 'El jardín de las delicias'?","El Bosco","Rafael","Caravaggio","Tiziano"
+arte,dificil,¿Qué artista creó la serie de pinturas 'Las Meninas'?,Diego Velázquez,Francisco Goya,El Greco,El Bosco
+arte,dificil,¿Cuál es el nombre del famoso mural pintado por Diego Rivera en la Ciudad de México?,Sueño de una tarde dominical en la Alameda,El hombre en el cráneo de cristal,La creación de Adán,La persistencia de la memoria
+arte,dificil,"¿Cuál es el nombre del estilo arquitectónico que caracteriza a la Sagrada Familia de Barcelona?","Modernismo catalán","Barroco","Gótico","Románico"
+arte,dificil,"¿Qué artista pintó el techo de la Capilla Sixtina?","Miguel Ángel","Leonardo da Vinci","Donatello","Rafael"
+entretenimiento,facil,¿Cuál es el nombre del personaje principal en la serie 'Stranger Things'?,Eleven,Will,Mike,Dustin
+entretenimiento,facil,¿Qué videojuego popular tiene un personaje llamado Mario?,Super Mario Bros.,Sonic,Pac-Man,Donkey Kong
+entretenimiento,facil,¿En qué película aparece el personaje de Jack Sparrow?,Piratas del Caribe,Los Vengadores,Harry Potter,El Señor de los Anillos
+entretenimiento,facil,"¿Qué personaje de Disney vive en un castillo?","La Cenicienta","Blanca Nieves","Mulan","Elsa"
+entretenimiento,facil,"¿Qué instrumento musical tiene teclas blancas y negras?","El piano","La guitarra","El violín","La flauta"
+entretenimiento,facil,"¿Cómo se llama el vaquero protagonista de Toy Story?","Woody","Buzz","Andy","Jessie"
+entretenimiento,facil,"¿En qué saga de películas aparece el personaje de Jack Sparrow?","Piratas del Caribe","Star Wars","Harry Potter","Los Vengadores"
+entretenimiento,medio,"¿En qué ciudad se encuentra el famoso teatro de ópera llamado 'La Scala'?","Milán","París","Viena","Roma"
+entretenimiento,medio,"¿Qué película dirigida por James Cameron fue la más taquillera del mundo hasta 2019?","Avatar","Titanic","Avengers: Endgame","Jurassic World"
+entretenimiento,medio,"¿Qué actor interpreta a Iron Man en el universo cinematográfico de Marvel?","Robert Downey Jr.","Chris Evans","Chris Hemsworth","Mark Ruffalo"
+entretenimiento,medio,¿Qué serie de televisión trata sobre un grupo de supervivientes en un apocalipsis zombie?,The Walking Dead,The 100,Fear the Walking Dead,Z Nation
+entretenimiento,medio,¿Cuál es el nombre del actor que interpreta a Wolverine en las películas de X-Men?,Hugh Jackman,Robert Downey Jr.,Chris Hemsworth,Tom Hardy
+entretenimiento,medio,¿Qué película dirigida por Christopher Nolan trata sobre un sueño dentro de un sueño?,Inception,Interstellar,The Dark Knight,Tenet
+entretenimiento,medio,"¿Qué serie de TV trata sobre un laboratorio de metanfetamina?","Breaking Bad","The Walking Dead","Narcos","Stranger Things"
+entretenimiento,dificil,"¿Qué obra de teatro escribió Arthur Miller en 1953 como alegoría del macartismo?","Las brujas de Salem","Muerte de un viajante","Panorama desde el puente","Todos eran mis hijos"
+entretenimiento,dificil,"¿En qué año se estrenó la primera película de 'Star Wars'?","1977","1980","1975","1983"
+entretenimiento,dificil,"¿Qué director realizó la película 'El Resplandor'?","Stanley Kubrick","Steven Spielberg","Alfred Hitchcock","Francis Ford Coppola"
+entretenimiento,dificil,"¿Cuál es el nombre completo del personaje que interpreta Bryan Cranston en Breaking Bad?","Walter White","Jesse Pinkman","Hank Schrader","Saul Goodman"
+entretenimiento,dificil,¿Cuál es el nombre del director de la película '2001: Odisea del Espacio'?,Stanley Kubrick,Steven Spielberg,Martin Scorsese,Francis Ford Coppola

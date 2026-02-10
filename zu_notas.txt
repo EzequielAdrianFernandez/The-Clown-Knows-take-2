@@ -1,0 +1,76 @@
+CLOWN_KNOWS_TAKE_2/
+├── a_preguntas.csv
+├── aa_main.py
+├── acciones_botones.py
+├── b_preguntas_VoF.csv
+├── botones_funciones.py
+├── laberinto_espejos.py
+├── laberintos_predeterminados
+├── leaderboard.py
+├── logica_juego.py
+├── manejador_estados.py
+├── menu_definiciones.py
+├── tienda_medallas.py
+├── verificaciones_botones
+├── y_musica.py
+├── z_configuraciones.json
+├── z_usuarios.json 
+├──musica/
+    ├── [Instrumental] TADC OS - Abstraction.wav
+    ├── derrota.wav
+    ├── electro_swing.wav
+    ├── laberinto_espejos.mp3
+    ├── leaderboard.wav
+    ├── menu_principal.mp3
+    ├── multiple_choice.wav
+    ├── Pearl Drift - Dream Pop Instrumental Beat.mp3
+    ├── verdadero_falso.mp3
+    ├── victoria.wav
+├──imagenes/
+    ├── 1.png
+    ├── juego_pregunta.png
+    ├── juego_resultado_final.png
+    ├── juego_resultado_final.png
+    ├── leaderboard.png 
+    ├── menu_principal.png 
+    ├── opciones.png 
+    ├── seleccion_usuario.png 
+    ├── tienda_medallas.png
+
+es un proyecto en donde los archivos que ves ya estan escritos y nececitan correcion y/o implementacion de cosas , en este caso voy a poner unas reglas
+
+1 no asumas , pregunta por modulos donde estan las funciones para asi conocer bien el proyecto
+
+2 no uses break o get , no es algo que tenga permitido (es un proyecto para la facultad)
+
+3 el codigo que escribis vos tiene que ser robusto/logaritmico
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+cambios a hacer:
+-dar una opcion para borrar usuarios (agregar tambien un "estas seguro")
+
+-darle a opciones una funcionalidad real
+
+-hacer que en vez de pasar entre menus al jugar , que muestre en verde la respuesta correcta y las demas en rojo , ademas quiero que para pasar a la siguiente ronda se pase a los 2 segundos o cuando el usuario haga click
+
+-hacer que los 2 botones de VoF sean mas grandes y que ellos sean cuadrados a ambos lados de la pantalla 
+
+-actualizar las medidas de los niveles y si nos da la cabeza hacer niveles a mano y generativos (onda "laberinto">2 opciones>jugar la opcion que elegiste)
+
+-hacer que los estiquers en las instrucciones se vean correctamente en laberinto de espejos
+
+-agregar los puestos de los mejores jugadores(datos predeterminados+usuarios creados para evitar una leaderboard vacia) PROCESO
+-cambiar fondos por unos mejores y recortar los que estan mal recortados✅​
+-agregar tienda de medallas para el usuario ✅
+-hacer que solo se pueda salir del juego en el menu principal , es confuso ver 2 botones para el usuario ✅
+-musica y efectos visuales ✅​
+-cambiar fondos y hacer que el titulo del juego se vea mejor ✅​
+
+        A SIMPLE VISTA /\------------------------------------------------------------------------------------ AHORA SEGUN LA CONSIGNA \/
+
+-LO DE LOS AUTISTAS LOCO JAJAJA
+-agregar un mini-cuestionario cuando se crea un usuario nuevo y agregar la informacion del usuario al json
+-organizar mejor la logica y separar lo visual de lo logico

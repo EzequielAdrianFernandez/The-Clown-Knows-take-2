@@ -1,0 +1,58 @@
+{
+    "usuario_1": {
+        "nombre": "pachacho",
+        "record_boletos": 240,
+        "total_boletos": 3724,
+        "partidas_jugadas": 37,
+        "tiempo_promedio": 16.128451940175648,
+        "medallas": "🎮🏆👑💰"
+    },
+    "usuario_2": {
+        "nombre": "pachacha",
+        "record_boletos": 23,
+        "total_boletos": 280,
+        "partidas_jugadas": 21,
+        "tiempo_promedio": 1.2498651232038225,
+        "medallas": "🎮⚡"
+    },
+    "usuario_3": {
+        "nombre": "pachachi",
+        "record_boletos": 25,
+        "total_boletos": 98,
+        "partidas_jugadas": 10,
+        "tiempo_promedio": 1,
+        "medallas": "🌟🎮"
+    },
+    "usuario_4": {
+        "nombre": "gonchalo",
+        "record_boletos": 18,
+        "total_boletos": 34,
+        "partidas_jugadas": 2,
+        "tiempo_promedio": 1,
+        "medallas": "🎮🍕🧠"
+    },
+    "usuario_5": {
+        "nombre": "maga",
+        "record_boletos": 20,
+        "total_boletos": 30,
+        "partidas_jugadas": 12,
+        "tiempo_promedio": 1,
+        "medallas": "🎮💡🧠"
+    },
+    "usuario_6": {
+        "nombre": "echequiel",
+        "record_boletos": 30,
+        "total_boletos": 337,
+        "partidas_jugadas": 5,
+        "tiempo_promedio": 1,
+        "medallas": "💡🌟🎮"
+    },
+    "usuario_7": {
+        "nombre": "germanchin",
+        "record_boletos": 140,
+        "total_boletos": 2038,
+        "partidas_jugadas": 13,
+        "tiempo_promedio": 14.461370468139648,
+        "medallas": "🎮👑💰⚡"
+    }
+}

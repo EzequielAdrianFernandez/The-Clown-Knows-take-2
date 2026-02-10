@@ -1,0 +1,137 @@
+categoria,dificultad,pregunta,correcta,incorrecta
+biologia,facil,"Los elefantes utilizados en el circo son mamíferos.",verdadero,"falso"
+biologia,facil,"Los caballos son animales que pueden ser entrenados para espectáculos.",verdadero,"falso"
+biologia,facil,"Los tigres tienen garras retráctiles.",verdadero,"falso"
+biologia,facil,"Los leones son carnívoros.",verdadero,"falso"
+biologia,facil,"Los koalas tienen huellas dactilares similares a las humanas.",verdadero,falso
+biologia,facil,"Las ballenas azules son los animales más grandes que han existido.",verdadero,falso
+biologia,facil,"Los pulpos tienen tres corazones.",verdadero,falso
+biologia,facil,"Los camaleones pueden mover sus ojos en direcciones independientes.",verdadero,falso
+biologia,facil,"Los murciélagos son ciegos y se guían solo por ecolocalización.",falso,verdadero
+biologia,medio,"Los caballos pueden condicionarse mediante refuerzos positivos.",verdadero,"falso"
+biologia,medio,"Los elefantes tienen una excelente memoria, útil en su entrenamiento.",verdadero,"falso"
+biologia,medio,"Las mitocondrias tienen su propio ADN separado del núcleo celular.",verdadero,falso
+biologia,medio,"Los virus pueden reproducirse fuera de una célula huésped.",falso,verdadero
+biologia,medio,"Los tiburones son peces cartilaginosos sin vejiga natatoria.",verdadero,falso
+biologia,medio,"Las plantas realizan fotosíntesis y respiración celular simultáneamente.",verdadero,falso
+biologia,medio,"Los humanos comparten aproximadamente el 50% de su ADN con los plátanos.",falso,verdadero
+biologia,medio,"Los leones del circo aprenden rutinas por instinto natural.",falso,"verdadero"
+biologia,medio,"Los grandes felinos del circo necesitan cuidados veterinarios especiales.",verdadero,"falso"
+biologia,dificil,"Los tigres blancos deben su color a una mutación recesiva.",verdadero,"falso"
+biologia,dificil,"Los caballos pueden experimentar estrés crónico si no se manejan adecuadamente.",verdadero,"falso"
+biologia,dificil,"Los elefantes del circo sudan por las patas para regular su temperatura.",falso,"verdadero"
+biologia,dificil,"La genética influye en la docilidad de algunos animales de circo.",verdadero,"falso"
+biologia,dificil,"Los leones tienen un campo visual más amplio que los humanos.",verdadero,"falso"
+ciencia,facil,"El agua hierve a 100°C al nivel del mar en condiciones estándar.",verdadero,falso
+ciencia,facil,"Los electrones tienen carga negativa.",verdadero,falso
+ciencia,facil,"El diamante es la forma más dura de carbono natural.",verdadero,falso
+ciencia,facil,"La luz viaja más rápido en el vacío que en el agua.",verdadero,falso
+ciencia,facil,"El sonido no se propaga en el vacío.",verdadero,falso
+ciencia,facil,"El Sol es una estrella.",verdadero,falso
+ciencia,facil,"Los trapecistas deben tener buen equilibrio para evitar caídas.",verdadero,"falso"
+ciencia,facil,"La gravedad afecta los saltos de los acróbatas.",verdadero,"falso"
+ciencia,facil,"Los malabaristas dependen de la fuerza centrífuga.",falso,"verdadero"
+ciencia,facil,"El equilibrio es fundamental en el acto de cuerda floja.",verdadero,"falso"
+ciencia,medio,"El centro de gravedad influye en la estabilidad del equilibrista.",verdadero,"falso"
+ciencia,medio,"Los malabaristas se benefician de entender trayectorias parabólicas.",verdadero,"falso"
+ciencia,medio,"El fuego de los tragafuegos es producido por agua especial.",falso,"verdadero"
+ciencia,medio,"El equilibrio dinámico es esencial para los monociclistas del circo.",verdadero,"falso"
+ciencia,medio,"El principio de conservación del momento angular se ve en malabaristas.",verdadero,"falso"
+ciencia,dificil,"El movimiento de un acróbata en caída libre puede modelarse con ecuaciones de segundo orden.",verdadero,"falso"
+ciencia,medio,"La teoría de la relatividad general explica la gravedad como curvatura del espacio-tiempo.",verdadero,falso
+ciencia,medio,"El efecto Coriolis influye en la dirección de los huracanes.",verdadero,falso
+ciencia,medio,"Los superconductores tienen resistencia eléctrica cero.",verdadero,falso
+ciencia,medio,"El Principio de Incertidumbre de Heisenberg se aplica a partículas subatómicas.",verdadero,falso
+ciencia,medio,"La fusión nuclear produce menos energía que la fisión nuclear.",falso,verdadero
+ciencia,dificil,"Los cuásares son núcleos galácticos activos alimentados por agujeros negros supermasivos.",verdadero,falso
+ciencia,dificil,"La entropía de un sistema aislado siempre aumenta con el tiempo.",verdadero,falso
+ciencia,dificil,"El entrelazamiento cuántico permite correlaciones instantáneas entre partículas.",verdadero,falso
+ciencia,dificil,"Los cristales de tiempo rompen la simetría de traslación temporal.",verdadero,falso
+ciencia,dificil,"La teoría de cuerdas propone que las partículas son vibraciones unidimensionales.",verdadero,falso
+ciencia,dificil,"Los malabaristas aplican principios de física newtoniana inconscientemente.",verdadero,"falso"
+ciencia,dificil,"Los tragafuegos usan combustibles con bajo punto de ignición.",verdadero,"falso"
+ciencia,dificil,"La percepción del riesgo en actos peligrosos se relaciona con la amígdala cerebral.",verdadero,"falso"
+ciencia,dificil,"Los equilibristas alteran su postura para modificar su centro de masa.",verdadero,"falso"
+biologia,dificil,"La telomerasa ayuda a prevenir el acortamiento de los telómeros durante la división celular.",verdadero,falso
+biologia,dificil,"La crisálida de las mariposas secreta enzimas para digerir sus propios tejidos.",verdadero,falso
+biologia,dificil,"Los tardígrados pueden sobrevivir en el vacío del espacio gracias a la anhidrobiosis.",verdadero,falso
+biologia,dificil,"La selección kin es un factor en la evolución del comportamiento altruista.",verdadero,falso
+biologia,dificil,"Los hongos están más estrechamente relacionados con los animales que con las plantas.",verdadero,falso
+arte,facil,"Los trajes de los payasos suelen tener colores brillantes.",verdadero,"falso"
+arte,facil,"El maquillaje de payaso se usa para ocultar su identidad real.",falso,"verdadero"
+arte,facil,"El circo utiliza música alegre para animar al público.",verdadero,"falso"
+arte,facil,"Los colores primarios son frecuentes en la decoración circense.",verdadero,"falso"
+arte,facil,"La Mona Lisa fue pintada por Leonardo da Vinci.",verdadero,falso
+arte,facil,"El violín tiene cuatro cuerdas.",verdadero,falso
+arte,facil,"Van Gogh se cortó la oreja izquierda.",verdadero,falso
+arte,facil," Shakespeare escribió principalmente en inglés isabelino.",verdadero,falso
+arte,facil,"La música clásica barroca precede al período clásico.",verdadero,falso
+arte,facil,"Los acróbatas nunca usan vestuario especial.",falso,"verdadero"
+arte,medio,"El Guernica de Picasso representa el bombardeo de la ciudad vasca durante la guerra civil española.",verdadero,falso
+arte,medio,"La perspectiva lineal fue desarrollada durante el Renacimiento.",verdadero,falso
+arte,medio,"Stravinsky compuso 'La consagración de la primavera'.",verdadero,falso
+arte,medio,"El ballet 'El lago de los cisnes' fue compuesto por Tchaikovsky.",verdadero,falso
+arte,medio,"El dripping era una técnica característica de Jackson Pollock.",verdadero,falso
+arte,medio,"El vestuario circense se diseña para destacar bajo luces brillantes.",verdadero,"falso"
+arte,medio,"El maquillaje de payaso se aplica igual en todas las culturas.",falso,"verdadero"
+arte,medio,"Los colores del circo suelen ser contrastantes para llamar la atención.",verdadero,"falso"
+arte,medio,"La música en el circo puede influir en la percepción del riesgo.",verdadero,"falso"
+arte,dificil,"El diseño de iluminación en un circo puede incluir cálculos de óptica escénica.",verdadero,"falso"
+arte,dificil,"El simbolismo del maquillaje de payaso tiene raíces antropológicas.",verdadero,"falso"
+arte,dificil,"Las formas geométricas del escenario circense están inspiradas en el brutalismo.",falso,"verdadero"
+arte,dificil,"El vestuario de un espectáculo puede influir en la percepción del tiempo escénico.",verdadero,"falso"
+arte,dificil,"La escultura 'El pensador' de Rodin originalmente formaba parte de 'Las puertas del infierno'.",verdadero,falso
+arte,dificil,"John Cage compuso '4'33"' que consiste en silencio.",verdadero,falso
+arte,dificil,"El ready-made 'Fuente' de Duchamp era originalmente un urinario.",verdadero,falso
+arte,dificil,"La Ópera de Sídney fue diseñada por Jørn Utzon.",verdadero,falso
+arte,dificil,"La película 'El acorazado Potemkin' es conocida por su escena de la escalinata de Odesa.",verdadero,falso
+entretenimiento,facil,"Harry Houdini era famoso por sus escapes.",verdadero,falso
+entretenimiento,facil,"Netflix comenzó como un servicio de alquiler de DVD por correo.",verdadero,falso
+entretenimiento,facil,"La película 'Titanic' ganó 11 premios Oscar.",verdadero,falso
+entretenimiento,facil,"Mickey Mouse fue creado por Walt Disney.",verdadero,falso
+entretenimiento,facil,"Los videojuegos son considerados una forma de arte en algunos países.",verdadero,falso
+entretenimiento,facil,"Los payasos son personajes clásicos del circo.",verdadero,"falso"
+entretenimiento,facil,"El circo combina diferentes tipos de espectáculos.",verdadero,"falso"
+entretenimiento,facil,"Un domador de leones es parte común del elenco circense.",verdadero,"falso"
+entretenimiento,facil,"Los circos modernos no utilizan carpas.",falso,"verdadero"
+entretenimiento,medio,"El circo tradicional combina actos con animales y artistas humanos.",verdadero,"falso"
+entretenimiento,medio,"El juego 'The Legend of Zelda' fue creado por Shigeru Miyamoto.",verdadero,falso
+entretenimiento,medio,"La serie 'Stranger Things' está ambientada en los años 80.",verdadero,falso
+entretenimiento,medio,"El Festival de Cannes se celebra anualmente en Francia.",verdadero,falso
+entretenimiento,medio,"Broadway está ubicado en Nueva York.",verdadero,falso
+entretenimiento,medio,"La primera película sonora fue 'El cantante de jazz' (1927).",verdadero,falso
+entretenimiento,medio,"El Cirque du Soleil es famoso por evitar el uso de animales.",verdadero,"falso"
+entretenimiento,medio,"Un espectáculo circense nunca incluye elementos teatrales.",falso,"verdadero"
+entretenimiento,medio,"Algunos circos contemporáneos mezclan danza con acrobacia.",verdadero,"falso"
+entretenimiento,dificil,"El Cirque du Soleil fue fundado en Canadá en 1984.",verdadero,"falso"
+entretenimiento,dificil,"Algunos circos contemporáneos utilizan tecnología de realidad aumentada.",verdadero,"falso"
+entretenimiento,dificil,"Akira Kurosawa dirigió 'Los siete samuráis', que inspiró 'Los siete magníficos'.",verdadero,falso
+entretenimiento,dificil,"El videojuego 'Pong' fue lanzado por Atari en 1972.",verdadero,falso
+entretenimiento,dificil,"Marlon Brando rechazó su Oscar por 'El padrino' por protesta.",verdadero,falso
+entretenimiento,dificil,"El primer largometraje animado fue 'Blancanieves y los siete enanitos' (1937).",verdadero,falso
+entretenimiento,dificil,"Stan Lee creó todos los personajes de Marvel Comics.",falso,verdadero
+entretenimiento,dificil,"Los circos actuales están prohibidos en todo el mundo.",falso,"verdadero"
+historia,facil,"Julio César fue asesinado en los idus de marzo.",verdadero,falso
+historia,facil,"La Revolución Francesa comenzó en 1789.",verdadero,falso
+historia,facil,"Cristóbal Colón llegó a América en 1492.",verdadero,falso
+historia,facil,"La Muralla China fue construida completamente durante una dinastía.",falso,verdadero
+historia,facil,"La Primera Guerra Mundial comenzó en 1914.",verdadero,falso
+historia,facil,"Los circos existen desde hace siglos.",verdadero,"falso"
+historia,facil,"El circo romano incluía batallas navales falsas.",verdadero,"falso"
+historia,facil,"El circo moderno se originó en el siglo XX.",falso,"verdadero"
+historia,medio,"P. T. Barnum fue un empresario destacado del circo en EE.UU.",verdadero,"falso"
+historia,medio,"El circo ha evolucionado desde espectáculos callejeros.",verdadero,"falso"
+historia,medio,"Los circos medievales ya usaban carpas como escenario principal.",falso,"verdadero"
+historia,medio,"La Batalla de Waterloo puso fin al imperio de Napoleón Bonaparte.",verdadero,falso
+historia,medio,"Machu Picchu fue construido por los incas.",verdadero,falso
+historia,medio,"La Revolución Industrial comenzó en Gran Bretaña.",verdadero,falso
+historia,medio,"Cleopatra VII fue la última gobernante del Egipto ptolemaico.",verdadero,falso
+historia,medio,"La Peste Negra mató a aproximadamente un tercio de la población europea.",verdadero,falso
+historia,dificil,"El primer circo moderno fue fundado por Philip Astley en el siglo XVIII.",verdadero,"falso"
+historia,dificil,"En el siglo XIX, algunos circos viajaban en tren para montar espectáculos en distintas ciudades.",verdadero,"falso"
+historia,dificil,"Cleopatra fue la primera en organizar espectáculos circenses en Egipto.",falso,"verdadero"
+historia,dificil,"El Edicto de Milán (313 d.C.) legalizó el cristianismo en el Imperio Romano.",verdadero,falso
+historia,dificil,"La Guerra de los Cien Años duró 116 años.",verdadero,falso
+historia,dificil," Hammurabi es conocido por uno de los primeros códigos legales escritos.",verdadero,falso
+historia,dificil,"La Dinastía Tang en China fue contemporánea del Imperio bizantino.",verdadero,falso
+historia,dificil,"Simón Bolívar liberó a seis países del dominio español.",verdadero,falso
