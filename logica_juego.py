@@ -1,3 +1,42 @@
+"""
+🎮 MÓDULO: logica_juego.py
+===========================
+CORAZÓN DE LA LÓGICA DEL JUEGO - VERSIÓN LIMPIA (SIN DUPLICADOS)
+
+¿QUÉ HACE ESTE MÓDULO?
+----------------------------------------------------------------------------
+1. 📂 CARGA DE DATOS: preguntas (CSV), configuraciones (JSON), usuarios (JSON)
+2. ❓ LÓGICA DE PREGUNTAS: selección, verificación, remoción, randomización
+3. 💰 SISTEMA DE TICKETS: acreditación por ronda y dificultad
+4. 👤 GESTIÓN DE USUARIOS: creación, actualización de estadísticas, medallas
+5. 🎮 MÚLTIPLES MODOS: Multiple Choice y Verdadero/Falso con reglas propias
+
+ESTRUCTURA DE DATOS PRINCIPAL (config):
+----------------------------------------------------------------------------
+Es un diccionario enorme que guarda TODO el estado de la partida actual:
+- aciertos/fallas       → Contadores de respuestas
+- tickets_*            → Tickets en juego, conseguidos, por ronda
+- dificultad/categoría → De la pregunta actual
+- pregunta/respuestas  → Datos de la pregunta activa
+- tiempo_partida       → Tiempo total de la partida
+
+FLUJO TÍPICO (Multiple Choice):
+----------------------------------------------------------------------------
+1. reestablecer_configuraciones() → Limpia partida anterior
+2. determinar_dificultad_y_tickets() → Según ronda (1-3: fácil, 4-6: medio, 7+: difícil)
+3. seleccionar_pregunta() → Elige aleatoria según categoría y dificultad
+4. randomizar_respuestas() → Mezcla correcta + incorrectas
+5. verificar_respuesta()   → Compara con índice seleccionado
+6. acreditar_tickets_ronda() → Suma tickets si corresponde
+7. remover_pregunta_usada() → Elimina para no repetir
+8. actualizar_estadisticas_usuario() → Al terminar las 10 rondas
+
+DEPENDENCIAS:
+----------------------------------------------------------------------------
+- random, json, csv, time → Librerías estándar
+- menu_definiciones.py    → Solo MENU_PRINCIPAL (para volver)
+"""
+
 import random
 import json
 import csv
@@ -5,8 +44,34 @@ import time
 
 from menu_definiciones import MENU_PRINCIPAL
 
+
+# ============================================================================
+# 📂 CARGA DE DATOS DESDE ARCHIVOS
+# ============================================================================
+
 def cargar_preguntas_desde_csv(ruta_csv):
-    """Carga las preguntas desde CSV a la estructura del juego"""
+    """
+    📖 Carga las preguntas de Multiple Choice desde un archivo CSV.
+    
+    Estructura esperada del CSV:
+        categoria, dificultad, pregunta, correcta, incorrecta1, incorrecta2, incorrecta3
+    
+    Estructura de salida:
+        {
+            "Categoría1": {
+                "facil":  [ {pregunta, correcta, incorrectas}, ... ],
+                "medio":  [ ... ],
+                "dificil": [ ... ]
+            },
+            ...
+        }
+    
+    Args:
+        ruta_csv (str): Ruta al archivo CSV
+    
+    Returns:
+        dict: Biblioteca de preguntas organizada por categoría → dificultad → lista
+    """
     preguntas = {}
     
     with open(ruta_csv, 'r', encoding='utf-8') as file:
@@ -18,6 +83,7 @@ def cargar_preguntas_desde_csv(ruta_csv):
             categoria = fila['categoria']
             dificultad = fila['dificultad']
             
+            # Si la categoría no existe, crearla con las 3 dificultades
             if categoria not in preguntas:
                 preguntas[categoria] = {
                     'facil': [],
@@ -39,289 +105,22 @@ def cargar_preguntas_desde_csv(ruta_csv):
     
     return preguntas
 
-def cargar_configuraciones(ruta_json):
-    """Carga las configuraciones desde JSON"""
-    with open(ruta_json, 'r', encoding='utf-8') as file:
-        return json.load(file)
-
-def cargar_usuarios(ruta_json):
-    """Carga los usuarios desde JSON"""
-    try:
-        with open(ruta_json, 'r', encoding='utf-8') as file:
-            return json.load(file)
-    except FileNotFoundError:
-        # Si el archivo no existe, crear uno vacío
-        usuarios = {}
-        guardar_json(ruta_json, usuarios)
-        return usuarios
-
-def guardar_json(ruta, datos):
-    """Guarda datos en archivo JSON"""
-    with open(ruta, 'w', encoding='utf-8') as file:
-        json.dump(datos, file, indent=4, ensure_ascii=False)
-
-def reestablecer_configuraciones(config, ruta_config):
-    """Restablece configuraciones a valores iniciales"""
-    config["aciertos"] = 0
-    config["aciertos_ronda"] = 0
-    config["fallas"] = 0
-    config["fallas_ronda"] = 0
-    config["ronda"] = 1
-    config["tickets"] = 0
-    config["tickets_conseguidos"] = 0
-    config["tickets_ronda"] = 0
-    config["limite"] = 10
-    config["ingreso"] = "no_ingreso"
-    config["ingreso_filtrado"] = "ingreso_no_filtrado"
-    config["valido"] = "no_valido"
-    config["seguir_jugando"] = True
-    config["mensaje"] = "sin_mensaje"
-    config["total_preguntas"] = 0
-    config["porcentaje_acierto"] = 0
-    config["dificultad"] = "dificultad_no_establecida"
-    config["verdadera"] = "verdadera_no_cambiada"
-    config["respuestas"] = ["no_respuesta_1", "no_respuesta_2", "no_respuesta_3", "no_respuesta_4"]
-    config["pregunta"] = "sin_pregunta"
-    config["categoria"] = "sin_categoria"
-    config["contesto"] = False
-    config["boletos_acumulados_partida"] = 0
-    config["record_boletos_previo"] = 0
-    config["boletos_ganados_partida"] = 0
-    config["tiempo_partida"] = 0
-    config["tiempo_promedio_usuario"] = 0
-    config["nuevo_tiempo"] = 0
-    
-    guardar_json(ruta_config, config)
-
-def determinar_dificultad_y_tickets(configuraciones, ronda):
-    """Determina la dificultad y tickets según la ronda"""
-    if ronda <= 3:
-        configuraciones["dificultad"] = "facil"
-        configuraciones["tickets_ronda"] = 10
-    elif ronda <= 6:
-        configuraciones["dificultad"] = "medio"
-        configuraciones["tickets_ronda"] = 30
-    else:
-        configuraciones["dificultad"] = "dificil"
-        configuraciones["tickets_ronda"] = 50
-
-def seleccionar_pregunta(biblioteca, config):
-    """Selecciona una pregunta aleatoria según categoría y dificultad"""
-    categorias_disponibles = list(biblioteca.keys())
-    config["categoria"] = random.choice(categorias_disponibles)
-    categoria = config["categoria"]
-
-    dificultad = config["dificultad"]
-    preguntas_disponibles = biblioteca[categoria][dificultad]
-    
-    if len(preguntas_disponibles) > 0:
-        pregunta = random.choice(preguntas_disponibles)
-        config["pregunta"] = pregunta
-        config["verdadera"] = pregunta["correcta"]
-        config["respuestas"] = pregunta["incorrectas"]
-        return True
-    return False
-
-def remover_pregunta_usada(biblioteca_preguntas, biblioteca_configuraciones):
-    """Remueve la pregunta usada del diccionario - Multiple Choice"""
-    categoria = biblioteca_configuraciones["categoria"]
-    dificultad = biblioteca_configuraciones["dificultad"]
-    pregunta_usada = biblioteca_configuraciones["pregunta"]
-    
-    if categoria in biblioteca_preguntas and dificultad in biblioteca_preguntas[categoria]:
-        lista_preguntas = biblioteca_preguntas[categoria][dificultad]
-        for i in range(len(lista_preguntas)):
-            pregunta = lista_preguntas[i]
-            if pregunta["preguntas"] == pregunta_usada["preguntas"]:
-                lista_preguntas.pop(i)
-                break
-
-def remover_pregunta_usada_VoF(biblioteca_preguntas, biblioteca_configuraciones):
-    """Remueve la pregunta usada del diccionario - Verdadero o Falso"""
-    categoria = biblioteca_configuraciones["categoria"]
-    dificultad = biblioteca_configuraciones["dificultad"]
-    pregunta_usada = biblioteca_configuraciones["pregunta"]
-    
-    if categoria in biblioteca_preguntas and dificultad in biblioteca_preguntas[categoria]:
-        lista_preguntas = biblioteca_preguntas[categoria][dificultad]
-        for i in range(len(lista_preguntas)):
-            pregunta = lista_preguntas[i]
-            if pregunta["preguntas"] == pregunta_usada["preguntas"]:
-                lista_preguntas.pop(i)
-                break
-
-def randomizar_respuestas(config):
-    """Mezcla las respuestas aleatoriamente"""
-    verdadera = config["verdadera"]
-    lista_temp = [verdadera] + config["respuestas"]
-    random.shuffle(lista_temp)
-    config["respuestas"] = lista_temp
-
-def verificar_respuesta(config, opcion_seleccionada):
-    """Verifica si la respuesta seleccionada es correcta"""
-    respuestas = config["respuestas"]
-    verdadera = config["verdadera"]
-    
-    config["ingreso_filtrado"] = opcion_seleccionada
-    config["valido"] = True
-    
-    if respuestas[opcion_seleccionada] == verdadera:
-        config["mensaje"] = "¡Correcta!"
-        config["aciertos_ronda"] = 1
-        config["fallas_ronda"] = 0
-    else:
-        config["mensaje"] = "Incorrecta"
-        config["aciertos_ronda"] = 0
-        config["fallas_ronda"] = 1
-        config["tickets_ronda"] = 0
-
-    config["contesto"] = True
-
-def acreditar_tickets_ronda(config):
-    """Acredita los tickets ganados en la ronda"""
-    config["tickets_conseguidos"] += config["tickets_ronda"]
-    config["aciertos"] += config["aciertos_ronda"]
-    config["fallas"] += config["fallas_ronda"]
-
-def crear_nuevo_usuario(usuarios, nombre_usuario):
-    """Crea un nuevo usuario en el sistema"""
-    # Encontrar el próximo ID disponible
-    proximo_id = 1
-    for usuario_id in usuarios.keys():
-        if usuario_id.startswith('usuario_'):
-            try:
-                id_num = int(usuario_id.split('_')[1])
-                if id_num >= proximo_id:
-                    proximo_id = id_num + 1
-            except ValueError:
-                continue
-    
-    nuevo_id = f"usuario_{proximo_id}"
-    
-    # Crear estructura del nuevo usuario
-    usuarios[nuevo_id] = {
-        "nombre": nombre_usuario,
-        "record_boletos": 0,
-        "total_boletos": 0,
-        "partidas_jugadas": 0,
-        "tiempo_promedio": 0,
-        "medallas": ""
-    }
-    
-    guardar_json("z_usuarios.json", usuarios)
-    return nuevo_id
-
-def actualizar_estadisticas_usuario(usuarios, usuario_id, config):
-    """Actualiza las estadísticas del usuario después de una partida"""
-    if usuario_id not in usuarios:
-        raise KeyError(f"❌ Usuario '{usuario_id}' no existe")
-    
-    usuario = usuarios[usuario_id]
-    
-    # Actualizar tickets totales
-    usuario["total_boletos"] += config["tickets_conseguidos"]
-    
-    # Actualizar record si es mayor
-    if config["tickets_conseguidos"] > usuario["record_boletos"]:
-        usuario["record_boletos"] = config["tickets_conseguidos"]
-    
-    # Obtener tiempo de forma robusta (sin .get())
-    try:
-        tiempo_actual = obtener_tiempo_partida(config)
-    except ValueError as e:
-        print(f"⚠️  {e} - usando 0")
-        tiempo_actual = 0
-    
-    partidas_anteriores = usuario["partidas_jugadas"]
-    promedio_anterior = usuario["tiempo_promedio"]
-    
-    # Actualizar tiempo promedio
-    if partidas_anteriores > 0:
-        tiempo_total_anterior = promedio_anterior * partidas_anteriores
-        nuevo_tiempo_total = tiempo_total_anterior + tiempo_actual
-        usuario["tiempo_promedio"] = nuevo_tiempo_total / (partidas_anteriores + 1)
-    else:
-        usuario["tiempo_promedio"] = tiempo_actual
-    
-    # Incrementar partidas jugadas
-    usuario["partidas_jugadas"] += 1
-    
-    # Asignar medallas basadas en logros
-    usuario["medallas"] = calcular_medallas(usuario)
-    
-    guardar_json("z_usuarios.json", usuarios)
-
-def calcular_medallas(usuario):
-    """Calcula las medallas del usuario basado en sus logros"""
-    medallas = []
-    
-    # Medalla por partidas jugadas
-    if usuario["partidas_jugadas"] >= 10:
-        medallas.append("🎮")  # Jugador experimentado
-    if usuario["partidas_jugadas"] >= 25:
-        medallas.append("🏆")  # Jugador veterano
-    
-    # Medalla por tickets
-    if usuario["record_boletos"] >= 100:
-        medallas.append("👑")  # Rey del juego
-    if usuario["total_boletos"] >= 500:
-        medallas.append("💰")  # Rico
-    
-    # Medalla por tiempo
-    if usuario["tiempo_promedio"] < 60 and usuario["partidas_jugadas"] >= 5:
-        medallas.append("⚡")  # Veloz
-    
-    # Medalla por precisión (si tuviéramos ese dato)
-    
-    return "".join(medallas)
-
-def formatear_tiempo(segundos):
-    """Formatea el tiempo en segundos a un string legible"""
-    if segundos < 60:
-        return f"{segundos:.1f} segundos"
-    else:
-        minutos = int(segundos // 60)
-        segundos_restantes = segundos % 60
-        return f"{minutos} minuto{'s' if minutos > 1 else ''} y {segundos_restantes:.1f} segundos"
-
-##############VoF##############
-
-def cargar_preguntas_desde_csv(ruta_csv):
-    """Carga las preguntas desde CSV a la estructura del juego - Múltiple Choice"""
-    preguntas = {}
-    
-    with open(ruta_csv, 'r', encoding='utf-8') as file:
-        reader = csv.DictReader(file)
-        filas = list(reader)
-        
-        for i in range(len(filas)):
-            fila = filas[i]
-            categoria = fila['categoria']
-            dificultad = fila['dificultad']
-            
-            if categoria not in preguntas:
-                preguntas[categoria] = {
-                    'facil': [],
-                    'medio': [],
-                    'dificil': []
-                }
-            
-            pregunta_data = {
-                'preguntas': fila['pregunta'],
-                'correcta': fila['correcta'],
-                'incorrectas': [
-                    fila['incorrecta1'],
-                    fila['incorrecta2'], 
-                    fila['incorrecta3']
-                ]
-            }
-            
-            preguntas[categoria][dificultad].append(pregunta_data)
-    
-    return preguntas
 
 def cargar_preguntas_VoF_desde_csv(ruta_csv):
-    """Carga las preguntas de Verdadero o Falso desde CSV"""
+    """
+    📖 Carga las preguntas de Verdadero o Falso desde un CSV.
+    
+    Estructura esperada del CSV:
+        categoria, dificultad, pregunta, correcta, incorrecta
+    
+    La columna 'correcta' debe ser "verdadero" o "falso"
+    
+    Args:
+        ruta_csv (str): Ruta al archivo CSV
+    
+    Returns:
+        dict: Biblioteca de preguntas VoF (misma estructura que Multiple Choice)
+    """
     preguntas = {}
     
     with open(ruta_csv, 'r', encoding='utf-8') as file:
@@ -350,8 +149,128 @@ def cargar_preguntas_VoF_desde_csv(ruta_csv):
     
     return preguntas
 
+
+def cargar_configuraciones(ruta_json):
+    """
+    ⚙️ Carga las configuraciones desde un archivo JSON.
+    
+    Args:
+        ruta_json (str): Ruta al archivo de configuración
+    
+    Returns:
+        dict: Configuraciones del juego (sonido, mute, etc.)
+    """
+    with open(ruta_json, 'r', encoding='utf-8') as file:
+        return json.load(file)
+
+
+def cargar_usuarios(ruta_json):
+    """
+    👥 Carga los usuarios desde un archivo JSON.
+    
+    Si el archivo no existe, lo crea vacío.
+    
+    Args:
+        ruta_json (str): Ruta a z_usuarios.json
+    
+    Returns:
+        dict: Diccionario de usuarios (usuario_1, usuario_2, ...)
+    """
+    try:
+        with open(ruta_json, 'r', encoding='utf-8') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        # Primera ejecución: crear archivo vacío
+        usuarios = {}
+        guardar_json(ruta_json, usuarios)
+        return usuarios
+
+
+def guardar_json(ruta, datos):
+    """
+    💾 Guarda cualquier diccionario en formato JSON.
+    
+    Args:
+        ruta (str): Ruta del archivo a guardar
+        datos (dict): Datos a serializar
+    """
+    with open(ruta, 'w', encoding='utf-8') as file:
+        json.dump(datos, file, indent=4, ensure_ascii=False)
+
+
+# ============================================================================
+# 🔄 CONFIGURACIÓN Y RESETEO
+# ============================================================================
+
+def reestablecer_configuraciones(config, ruta_config):
+    """
+    🧹 Restablece TODAS las configuraciones a sus valores iniciales.
+    
+    Se llama al comenzar una nueva partida.
+    Evita que queden datos sucios de partidas anteriores.
+    
+    Args:
+        config (dict): Diccionario de configuración a modificar
+        ruta_config (str): Ruta para guardar los cambios
+    """
+    # Contadores básicos
+    config["aciertos"] = 0
+    config["aciertos_ronda"] = 0
+    config["fallas"] = 0
+    config["fallas_ronda"] = 0
+    config["ronda"] = 1
+    config["limite"] = 10  # 10 rondas por partida
+    
+    # Tickets
+    config["tickets"] = 0
+    config["tickets_conseguidos"] = 0
+    config["tickets_ronda"] = 0
+    
+    # Estado de la pregunta
+    config["ingreso"] = "no_ingreso"
+    config["ingreso_filtrado"] = "ingreso_no_filtrado"
+    config["valido"] = "no_valido"
+    config["seguir_jugando"] = True
+    config["mensaje"] = "sin_mensaje"
+    config["contesto"] = False
+    
+    # Datos de pregunta
+    config["total_preguntas"] = 0
+    config["porcentaje_acierto"] = 0
+    config["dificultad"] = "dificultad_no_establecida"
+    config["verdadera"] = "verdadera_no_cambiada"
+    config["respuestas"] = ["no_respuesta_1", "no_respuesta_2", "no_respuesta_3", "no_respuesta_4"]
+    config["pregunta"] = "sin_pregunta"
+    config["categoria"] = "sin_categoria"
+    
+    # Estadísticas de usuario (se actualizan al final)
+    config["boletos_acumulados_partida"] = 0
+    config["record_boletos_previo"] = 0
+    config["boletos_ganados_partida"] = 0
+    config["tiempo_partida"] = 0
+    config["tiempo_promedio_usuario"] = 0
+    config["nuevo_tiempo"] = 0
+    
+    guardar_json(ruta_config, config)
+
+
+# ============================================================================
+# 🎯 LÓGICA DE PREGUNTAS - MULTIPLE CHOICE
+# ============================================================================
+
 def determinar_dificultad_y_tickets(configuraciones, ronda):
-    """Determina la dificultad y tickets según la ronda - Multiple Choice"""
+    """
+    📊 Asigna dificultad y tickets según el número de ronda (Multiple Choice).
+    
+    Reglas:
+        Ronda 1-3 : Fácil   → 10 tickets
+        Ronda 4-6 : Medio   → 30 tickets
+        Ronda 7-10: Difícil → 50 tickets
+    
+    Args:
+        configuraciones (dict): Configuración de la partida
+        ronda (int): Número de ronda actual (1-10)
+    """
     if ronda <= 3:
         configuraciones["dificultad"] = "facil"
         configuraciones["tickets_ronda"] = 10
@@ -362,20 +281,18 @@ def determinar_dificultad_y_tickets(configuraciones, ronda):
         configuraciones["dificultad"] = "dificil"
         configuraciones["tickets_ronda"] = 50
 
-def determinar_dificultad_y_tickets_VoF(configuraciones, ronda):
-    """Determina la dificultad y tickets según la ronda - Verdadero o Falso"""
-    if ronda <= 3:
-        configuraciones["dificultad"] = "facil"
-        configuraciones["tickets_ronda"] = 5  # Menos tickets que multiple choice
-    elif ronda <= 6:
-        configuraciones["dificultad"] = "medio"
-        configuraciones["tickets_ronda"] = 10
-    else:
-        configuraciones["dificultad"] = "dificil"
-        configuraciones["tickets_ronda"] = 15
 
 def seleccionar_pregunta(biblioteca, config):
-    """Selecciona una pregunta aleatoria según categoría y dificultad - Multiple Choice"""
+    """
+    🎲 Elige una pregunta aleatoria de la categoría y dificultad actual.
+    
+    Args:
+        biblioteca (dict): Biblioteca de preguntas (de cargar_preguntas_desde_csv)
+        config (dict): Configuración actual (contiene categoria y dificultad)
+    
+    Returns:
+        bool: True si había preguntas disponibles, False si se acabaron
+    """
     categorias_disponibles = list(biblioteca.keys())
     config["categoria"] = random.choice(categorias_disponibles)
     categoria = config["categoria"]
@@ -391,8 +308,119 @@ def seleccionar_pregunta(biblioteca, config):
         return True
     return False
 
+
+def remover_pregunta_usada(biblioteca_preguntas, biblioteca_configuraciones):
+    """
+    🗑️ Elimina la pregunta recién usada para no repetirla.
+    
+    Busca en la biblioteca la pregunta exacta (por el texto) y la elimina.
+    
+    Args:
+        biblioteca_preguntas (dict): Biblioteca de preguntas
+        biblioteca_configuraciones (dict): Configuración con la pregunta usada
+    """
+    categoria = biblioteca_configuraciones["categoria"]
+    dificultad = biblioteca_configuraciones["dificultad"]
+    pregunta_usada = biblioteca_configuraciones["pregunta"]
+    
+    if categoria in biblioteca_preguntas and dificultad in biblioteca_preguntas[categoria]:
+        lista_preguntas = biblioteca_preguntas[categoria][dificultad]
+        for i in range(len(lista_preguntas)):
+            pregunta = lista_preguntas[i]
+            if pregunta["preguntas"] == pregunta_usada["preguntas"]:
+                lista_preguntas.pop(i)
+                break  # Solo una pregunta por ronda
+
+
+def randomizar_respuestas(config):
+    """
+    🔀 Mezcla las respuestas para que la correcta no esté siempre en la misma posición.
+    
+    Toma la respuesta correcta y las 3 incorrectas, las mezcla y guarda el orden.
+    """
+    verdadera = config["verdadera"]
+    lista_temp = [verdadera] + config["respuestas"]
+    random.shuffle(lista_temp)
+    config["respuestas"] = lista_temp
+
+
+def verificar_respuesta(config, opcion_seleccionada):
+    """
+    ✅ Verifica si la opción elegida por el jugador es correcta.
+    
+    Args:
+        config (dict): Configuración con la pregunta activa
+        opcion_seleccionada (int): Índice de la respuesta (0-3)
+    """
+    respuestas = config["respuestas"]
+    verdadera = config["verdadera"]
+    
+    config["ingreso_filtrado"] = opcion_seleccionada
+    config["valido"] = True
+    
+    if respuestas[opcion_seleccionada] == verdadera:
+        config["mensaje"] = "¡Correcta!"
+        config["aciertos_ronda"] = 1
+        config["fallas_ronda"] = 0
+    else:
+        config["mensaje"] = "Incorrecta"
+        config["aciertos_ronda"] = 0
+        config["fallas_ronda"] = 1
+        config["tickets_ronda"] = 0  # No gana tickets si falla
+
+    config["contesto"] = True
+
+
+# ============================================================================
+# 💰 SISTEMA DE TICKETS
+# ============================================================================
+
+def acreditar_tickets_ronda(config):
+    """
+    💵 Suma los tickets ganados en la ronda al total de la partida.
+    
+    También acumula aciertos y fallas para el resultado final.
+    """
+    config["tickets_conseguidos"] += config["tickets_ronda"]
+    config["aciertos"] += config["aciertos_ronda"]
+    config["fallas"] += config["fallas_ronda"]
+
+
+# ============================================================================
+# 🎯 LÓGICA DE PREGUNTAS - VERDADERO O FALSO
+# ============================================================================
+
+def determinar_dificultad_y_tickets_VoF(configuraciones, ronda):
+    """
+    📊 Asigna dificultad y tickets para Verdadero/Falso (menos tickets que MC).
+    
+    Reglas:
+        Ronda 1-3 : Fácil   → 5 tickets
+        Ronda 4-6 : Medio   → 10 tickets
+        Ronda 7-10: Difícil → 15 tickets
+    """
+    if ronda <= 3:
+        configuraciones["dificultad"] = "facil"
+        configuraciones["tickets_ronda"] = 5
+    elif ronda <= 6:
+        configuraciones["dificultad"] = "medio"
+        configuraciones["tickets_ronda"] = 10
+    else:
+        configuraciones["dificultad"] = "dificil"
+        configuraciones["tickets_ronda"] = 15
+
+
 def seleccionar_pregunta_VoF(biblioteca, config):
-    """Selecciona una pregunta aleatoria para Verdadero o Falso"""
+    """
+    🎲 Elige una pregunta de Verdadero/Falso.
+    
+    Args:
+        biblioteca (dict): Biblioteca de preguntas VoF
+        config (dict): Configuración actual
+    
+    Returns:
+        bool: True si había preguntas disponibles
+    """
     categorias_disponibles = list(biblioteca.keys())
     config["categoria"] = random.choice(categorias_disponibles)
     categoria = config["categoria"]
@@ -408,39 +436,35 @@ def seleccionar_pregunta_VoF(biblioteca, config):
         return True
     return False
 
-def randomizar_respuestas(config):
-    """Mezcla las respuestas aleatoriamente - Multiple Choice"""
-    verdadera = config["verdadera"]
-    lista_temp = [verdadera] + config["respuestas"]
-    random.shuffle(lista_temp)
-    config["respuestas"] = lista_temp
 
-def verificar_respuesta(config, opcion_seleccionada):
-    """Verifica si la respuesta seleccionada es correcta - Multiple Choice"""
-    respuestas = config["respuestas"]
-    verdadera = config["verdadera"]
+def remover_pregunta_usada_VoF(biblioteca_preguntas, biblioteca_configuraciones):
+    """
+    🗑️ Elimina pregunta usada de Verdadero/Falso (misma lógica que Multiple Choice).
+    """
+    categoria = biblioteca_configuraciones["categoria"]
+    dificultad = biblioteca_configuraciones["dificultad"]
+    pregunta_usada = biblioteca_configuraciones["pregunta"]
     
-    config["ingreso_filtrado"] = opcion_seleccionada
-    config["valido"] = True
-    
-    if respuestas[opcion_seleccionada] == verdadera:
-        config["mensaje"] = "¡Correcta!"
-        config["aciertos_ronda"] = 1
-        config["fallas_ronda"] = 0
-    else:
-        config["mensaje"] = "Incorrecta"
-        config["aciertos_ronda"] = 0
-        config["fallas_ronda"] = 1
-        config["tickets_ronda"] = 0
+    if categoria in biblioteca_preguntas and dificultad in biblioteca_preguntas[categoria]:
+        lista_preguntas = biblioteca_preguntas[categoria][dificultad]
+        for i in range(len(lista_preguntas)):
+            pregunta = lista_preguntas[i]
+            if pregunta["preguntas"] == pregunta_usada["preguntas"]:
+                lista_preguntas.pop(i)
+                break
 
-    config["contesto"] = True
 
 def verificar_respuesta_VoF(config, opcion_seleccionada):
-    """Verifica si la respuesta seleccionada es correcta - Verdadero o Falso"""
+    """
+    ✅ Verifica respuesta en Verdadero/Falso.
+    
+    Args:
+        config (dict): Configuración con la pregunta
+        opcion_seleccionada (str): "verdadero" o "falso"
+    """
     config["ingreso_filtrado"] = opcion_seleccionada
     config["valido"] = True
     
-    # opcion_seleccionada será "verdadero" o "falso"
     if opcion_seleccionada == config["verdadera"]:
         config["mensaje"] = "¡Correcta!"
         config["aciertos_ronda"] = 1
@@ -453,27 +477,31 @@ def verificar_respuesta_VoF(config, opcion_seleccionada):
 
     config["contesto"] = True
 
-###############GESTION DE USUARIOS##############
+
+# ============================================================================
+# 👤 GESTIÓN DE USUARIOS Y ESTADÍSTICAS
+# ============================================================================
+
 def crear_usuario_nuevo(usuarios, slot_numero, nombre_usuario):
     """
-    Crea un nuevo usuario en un slot específico.
+    🆕 Crea un nuevo usuario en un SLOT ESPECÍFICO (1-10).
+    
+    Esta es la función ACTIVA para creación de usuarios.
     
     Args:
-        usuarios (dict): Diccionario de usuarios existente
-        slot_numero (int): Número de slot (1-10)
-        nombre_usuario (str): Nombre del nuevo usuario
+        usuarios (dict): Diccionario de usuarios
+        slot_numero (int): Slot 1-10
+        nombre_usuario (str): Nombre del jugador
     
     Returns:
-        dict: Usuarios actualizados
+        dict: Usuarios actualizados (con el nuevo)
     """
     usuario_id = f"usuario_{slot_numero}"
     
-    # Verificar que el slot no esté ocupado
     if usuario_id in usuarios:
         print(f"❌ Slot {slot_numero} ya ocupado por: {usuarios[usuario_id]['nombre']}")
         return usuarios
     
-    # Crear nuevo usuario
     usuarios[usuario_id] = {
         "nombre": nombre_usuario,
         "record_boletos": 0,
@@ -486,12 +514,22 @@ def crear_usuario_nuevo(usuarios, slot_numero, nombre_usuario):
     print(f"✅ Usuario creado: {nombre_usuario} en slot {slot_numero}")
     return usuarios
 
+
 def crear_usuario_y_guardar(estado, menu_principal):
     """
-    Función auxiliar para crear usuario y guardar.
-    Recibe el estado completo y retorna estado actualizado.
+    💾 Función COMPLETA para crear usuario y actualizar estado.
+    
+    Este es el ORQUESTADOR de la creación de usuarios.
+    Se llama desde manejador_estados.py cuando el jugador confirma.
+    
+    Args:
+        estado (dict): Estado completo del juego
+        menu_principal (dict): Diccionario MENU_PRINCIPAL para volver
+    
+    Returns:
+        dict: Estado actualizado con el nuevo usuario
     """
-    # Verificar que tenemos todos los datos necesarios
+    # Validaciones
     if 'slot_seleccionado' not in estado or estado['slot_seleccionado'] is None:
         print("❌ Error: No hay slot seleccionado")
         return estado
@@ -500,19 +538,17 @@ def crear_usuario_y_guardar(estado, menu_principal):
         print("❌ Error: Nombre de usuario vacío")
         return estado
     
-    # Crear el nuevo usuario
-    from logica_juego import crear_usuario_nuevo, guardar_json
-    
+    # Crear el usuario
     estado['usuarios'] = crear_usuario_nuevo(
         estado['usuarios'],
         estado['slot_seleccionado'],
         estado['nombre_nuevo_usuario']
     )
     
-    # Guardar en JSON
+    # Persistencia
     guardar_json("z_usuarios.json", estado['usuarios'])
     
-    # Seleccionar usuario automáticamente
+    # Selección automática
     usuario_id = f"usuario_{estado['slot_seleccionado']}"
     estado['usuario_actual'] = usuario_id
     
@@ -527,33 +563,151 @@ def crear_usuario_y_guardar(estado, menu_principal):
     print(f"✅ Usuario '{estado['usuarios'][usuario_id]['nombre']}' creado y seleccionado")
     return estado
 
-def obtener_tiempo_partida(config, valor_por_defecto=0):
+
+def actualizar_estadisticas_usuario(usuarios, usuario_id, config):
     """
-    Obtiene el tiempo de partida de forma segura.
-    Garantiza que retorna un número válido.
+    📈 Actualiza TODAS las estadísticas de un usuario después de una partida.
+    
+    Qué actualiza:
+    - total_boletos    → Suma los tickets ganados en esta partida
+    - record_boletos   → Si es mayor que el anterior
+    - tiempo_promedio  → Promedio ponderado con nuevas partidas
+    - partidas_jugadas → +1
+    - medallas        → Recalcula según logros
     
     Args:
-        config (dict): Configuración/estadísticas del juego
-        valor_por_defecto (float): Valor por defecto si no existe o es inválido
-    
-    Returns:
-        float: Tiempo de la partida en segundos
+        usuarios (dict): Diccionario de usuarios
+        usuario_id (str): ID del usuario a actualizar
+        config (dict): Configuración con resultados de la partida
     
     Raises:
-        ValueError: Si el tiempo no es un número válido
+        KeyError: Si el usuario no existe
     """
-    # Verificar que la clave existe
+    if usuario_id not in usuarios:
+        raise KeyError(f"❌ Usuario '{usuario_id}' no existe")
+    
+    usuario = usuarios[usuario_id]
+    
+    # 1. Tickets totales
+    usuario["total_boletos"] += config["tickets_conseguidos"]
+    
+    # 2. Record personal
+    if config["tickets_conseguidos"] > usuario["record_boletos"]:
+        usuario["record_boletos"] = config["tickets_conseguidos"]
+    
+    # 3. Tiempo promedio (sin usar .get())
+    try:
+        tiempo_actual = obtener_tiempo_partida(config)
+    except ValueError as e:
+        print(f"⚠️  {e} - usando 0")
+        tiempo_actual = 0
+    
+    partidas_anteriores = usuario["partidas_jugadas"]
+    promedio_anterior = usuario["tiempo_promedio"]
+    
+    if partidas_anteriores > 0:
+        tiempo_total_anterior = promedio_anterior * partidas_anteriores
+        nuevo_tiempo_total = tiempo_total_anterior + tiempo_actual
+        usuario["tiempo_promedio"] = nuevo_tiempo_total / (partidas_anteriores + 1)
+    else:
+        usuario["tiempo_promedio"] = tiempo_actual
+    
+    # 4. Partidas jugadas
+    usuario["partidas_jugadas"] += 1
+    
+    # 5. Medallas (recalcular)
+    usuario["medallas"] = calcular_medallas(usuario)
+    
+    # 6. Guardar cambios
+    guardar_json("z_usuarios.json", usuarios)
+
+
+def calcular_medallas(usuario):
+    """
+    🏅 Asigna emojis según logros del usuario.
+    
+    Reglas:
+    - 🎮  → 10+ partidas
+    - 🏆  → 25+ partidas  
+    - 👑  → Record ≥ 100 tickets
+    - 💰  → Total ≥ 500 tickets
+    - ⚡  → Promedio < 60s Y 5+ partidas
+    
+    Args:
+        usuario (dict): Datos del usuario
+    
+    Returns:
+        str: String con todos los emojis concatenados (ej: "🎮🏆👑💰⚡")
+    """
+    medallas = []
+    
+    # Por partidas jugadas
+    if usuario["partidas_jugadas"] >= 10:
+        medallas.append("🎮")
+    if usuario["partidas_jugadas"] >= 25:
+        medallas.append("🏆")
+    
+    # Por tickets
+    if usuario["record_boletos"] >= 100:
+        medallas.append("👑")
+    if usuario["total_boletos"] >= 500:
+        medallas.append("💰")
+    
+    # Por velocidad
+    if usuario["tiempo_promedio"] < 60 and usuario["partidas_jugadas"] >= 5:
+        medallas.append("⚡")
+    
+    return "".join(medallas)
+
+
+def formatear_tiempo(segundos):
+    """
+    ⏱️ Convierte segundos a formato legible para humanos.
+    
+    Ejemplos:
+        45.3s    → "45.3 segundos"
+        90.2s    → "1 minuto y 30.2 segundos"
+        125.5s   → "2 minutos y 5.5 segundos"
+    
+    Args:
+        segundos (float): Tiempo en segundos
+    
+    Returns:
+        str: Tiempo formateado
+    """
+    if segundos < 60:
+        return f"{segundos:.1f} segundos"
+    else:
+        minutos = int(segundos // 60)
+        segundos_restantes = segundos % 60
+        return f"{minutos} minuto{'s' if minutos > 1 else ''} y {segundos_restantes:.1f} segundos"
+
+
+def obtener_tiempo_partida(config, valor_por_defecto=0):
+    """
+    ⏱️ Extrae el tiempo de partida de forma SEGURA y ROBUSTA.
+    
+    Reemplaza el uso de .get() con verificaciones explícitas.
+    
+    Args:
+        config (dict): Configuración de la partida
+        valor_por_defecto (float): Valor si no existe o es inválido
+    
+    Returns:
+        float: Tiempo de partida en segundos
+    
+    Raises:
+        ValueError: Si el tiempo existe pero no es un número válido
+    """
     if 'tiempo_partida' not in config:
-        print(f"⚠️  'tiempo_partida' no existe en config, usando valor por defecto: {valor_por_defecto}")
+        print(f"⚠️  'tiempo_partida' no existe, usando: {valor_por_defecto}")
         return valor_por_defecto
     
     tiempo = config['tiempo_partida']
     
-    # Validar que es un número
     if not isinstance(tiempo, (int, float)):
         raise ValueError(f"❌ 'tiempo_partida' debe ser número, recibido: {type(tiempo).__name__}")
     
-    # Validar que es positivo
     if tiempo < 0:
         raise ValueError(f"❌ 'tiempo_partida' no puede ser negativo: {tiempo}")
     

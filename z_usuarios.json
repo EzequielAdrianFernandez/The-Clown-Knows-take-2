@@ -2,9 +2,9 @@
     "usuario_1": {
         "nombre": "pachacho",
         "record_boletos": 240,
-        "total_boletos": 3884,
-        "partidas_jugadas": 39,
-        "tiempo_promedio": 15.710336813559897,
+        "total_boletos": 4329,
+        "partidas_jugadas": 43,
+        "tiempo_promedio": 14.77281231658403,
         "medallas": "🎮🏆👑💰⚡"
     },
     "usuario_2": {
@@ -50,7 +50,7 @@
     "usuario_7": {
         "nombre": "germanchin",
         "record_boletos": 140,
-        "total_boletos": 2172,
+        "total_boletos": 2292,
         "partidas_jugadas": 13,
         "tiempo_promedio": 14.461370468139648,
         "medallas": "🎮👑💰⚡"

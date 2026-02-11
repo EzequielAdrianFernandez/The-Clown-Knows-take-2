@@ -13,9 +13,7 @@ from manejador_estados import (
     obtener_fondo_actual
 )
 from menu_definiciones import FONDOS  # Importar los fondos
-from y_musica import musica_inicializar, dibujar_musica_pantalla , musica_actualizar_completo #funciones de musica
-
-
+from y_musica import musica_inicializar, dibujar_musica_pantalla , musica_actualizar_completo
 
 def main():
     # Configuración
@@ -59,21 +57,17 @@ def main():
         estado_juego = actualizar_estado_completo(
             pantalla, fuente, eventos, estado_juego
         )
-        
-        #Actualizar música (con el estado YA actualizado)
-        estado_juego = musica_actualizar_completo(eventos, estado_juego, forzar_actualizacion=True)
-        
-        # Obtener fondo actual (ahora sin .get())
+        # Obtener fondo actual basado en el estado ACTUALIZADO
         estado_actual = estado_juego['estado_actual']
         fondo_actual = obtener_fondo_actual(fondos_cargados, estado_actual)
         
-        # Dibujar fondo
+        # Dibujar fondo correspondiente al estado actual
         pantalla.blit(fondo_actual, (0, 0))
         
         # Dibujar controles de música en pantalla
-        dibujar_musica_pantalla(pantalla, fuente, estado_juego,ALTO_PANTALLA)
+        dibujar_musica_pantalla(pantalla, fuente, estado_juego, ALTO_PANTALLA)
 
-        # Actualizar estado completo del juego
+        # Actualizar estado completo del juego (NUEVAMENTE)
         estado_juego = actualizar_estado_completo(
             pantalla, fuente, eventos, estado_juego
         )
@@ -91,5 +85,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-pygame.K_p
