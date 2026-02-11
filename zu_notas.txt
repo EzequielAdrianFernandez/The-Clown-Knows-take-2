@@ -55,115 +55,22 @@ es un proyecto en donde los archivos que ves ya estan escritos y nececitan corre
 cambios a hacer:
 -dar una opcion para borrar usuarios (agregar tambien un "estas seguro")
 
--darle a opciones una funcionalidad real
+-darle a opciones una funcionalidad real✅
 
--hacer que en vez de pasar entre menus al jugar , que muestre en verde la respuesta correcta y las demas en rojo , ademas quiero que para pasar a la siguiente ronda se pase a los 2 segundos o cuando el usuario haga click
+-hacer que los 2 botones de VoF sean mas grandes y que ellos sean cuadrados a ambos lados de la pantalla ME OLVIDE
 
--hacer que los 2 botones de VoF sean mas grandes y que ellos sean cuadrados a ambos lados de la pantalla 
+-actualizar las medidas de los niveles✅
 
--actualizar las medidas de los niveles y si nos da la cabeza hacer niveles a mano y generativos (onda "laberinto">2 opciones>jugar la opcion que elegiste)
+-hacer que los estiquers en las instrucciones se vean correctamente en laberinto de espejos NO SE PUDO A TIEMPO
 
--hacer que los estiquers en las instrucciones se vean correctamente en laberinto de espejos
+-agregar los puestos de los mejores jugadores✅
 
--agregar los puestos de los mejores jugadores(datos predeterminados+usuarios creados para evitar una leaderboard vacia) PROCESO
 -cambiar fondos por unos mejores y recortar los que estan mal recortados✅​
+
 -agregar tienda de medallas para el usuario ✅
+
 -hacer que solo se pueda salir del juego en el menu principal , es confuso ver 2 botones para el usuario ✅
+
 -musica y efectos visuales ✅​
+
 -cambiar fondos y hacer que el titulo del juego se vea mejor ✅​
-
-        A SIMPLE VISTA /\------------------------------------------------------------------------------------ AHORA SEGUN LA CONSIGNA \/
-
--LO DE LOS AUTISTAS LOCO JAJAJA
--agregar un mini-cuestionario cuando se crea un usuario nuevo y agregar la informacion del usuario al json
--organizar mejor la logica y separar lo visual de lo logico
-
-
-
-======================================================================
-Hola Copilot, necesito que analices el código de mi proyecto y agregues comentarios explicativos antes de cada función, clase o bloque importante.
-El objetivo es ayudarme a estudiar y comprender mi propio código, no modificarlo ni reorganizarlo.
-
-⚠️ IMPORTANTE:
-
-NO modifiques la estructura del código, no lo reescribas, no lo refactorices ni cambies su lógica.
-
-NO cambies nombres de archivos, variables o funciones.
-
-NO separes archivos ni cambies la organización existente.
-
-SOLO agregá comentarios.
-
-📌 QUÉ DEBEN INCLUIR LOS COMENTARIOS
-Cada comentario antes de una función/clase/bloque debe explicar:
-
-Qué hace (propósito general)
-
-Su rol en el programa (cómo se relaciona con el resto del sistema)
-
-Qué recibe (parámetros y tipos)
-
-Qué devuelve (retorno y tipo)
-
-Lógica interna breve (solo si es compleja)
-
-Formato sugerido:
-
-python
-# ============================================
-# FUNCIÓN: [nombre]
-# PROPÓSITO: [qué hace exactamente]
-# ROL: [su función dentro del programa, cómo impacta al resto]
-# PARÁMETROS:
-#   - [parámetro] ([tipo]): [qué representa]
-# RETORNO: [tipo] - [qué devuelve]
-# ============================================
-✅ LO QUE SÍ PODÉS HACER
-Agregar comentarios antes de cada función, clase o método.
-
-Agregar comentarios de bloque dentro del código si aclaran lógica compleja.
-
-Usar un estilo claro, didáctico, pensado para alguien que está estudiando el código.
-
-❌ LO QUE NO PODÉS HACER
-❌ Modificar la estructura del código.
-❌ Cambiar nombres de funciones, variables o archivos.
-❌ Separar o fusionar archivos.
-❌ Agregar funciones nuevas.
-❌ Refactorizar lógica existente.
-❌ Cambiar el orden del código.
-❌ Eliminar código.
-
-🎯 EJEMPLO DE CÓMO DEBEN SER LOS COMENTARIOS
-Así está ahora:
-
-python
-def procesar_entrada(datos):
-    resultado = []
-    for item in datos:
-        resultado.append(item * 2)
-    return resultado
-Así debería quedar después de tu intervención:
-
-python
-# ============================================
-# FUNCIÓN: procesar_entrada
-# PROPÓSITO: Multiplica cada elemento de una lista por 2
-# ROL: Es utilizada por el módulo de lógica principal para transformar
-#      los datos crudos antes de mostrarlos en la interfaz.
-# PARÁMETROS:
-#   - datos (list): Lista de números enteros o flotantes
-# RETORNO: list - Nueva lista con cada elemento multiplicado por 2
-# ============================================
-def procesar_entrada(datos):
-    resultado = []
-    for item in datos:
-        resultado.append(item * 2)
-    return resultado
-📚 CONTEXTO ADICIONAL (opcional pero útil)
-Este proyecto es un juego de preguntas y respuestas donde tenia que elegir una tematica y yo elegi una tematica de circo siguiendo siertas directivas para un final
-Estoy estudiando el código para aprender y necesito entender:
-
-Qué responsabilidad tiene cada función.
-
-Cómo se conectan entre sí los módulos.
