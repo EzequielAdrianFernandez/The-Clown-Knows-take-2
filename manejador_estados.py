@@ -1129,6 +1129,33 @@ def interruptor_mutear(estado):
     from y_musica import toggle_mute_con_guardado
     return toggle_mute_con_guardado(estado)
 
-
+#=== FONDOS ===#
+def obtener_fondo_actual(fondos_cargados, estado_actual, estado_por_defecto="menu_principal"):
+    """
+    Obtiene el fondo actual de forma segura.
+    Garantiza que siempre retorna un fondo válido.
+    
+    Args:
+        fondos_cargados (dict): Diccionario de fondos precargados
+        estado_actual (str): Estado actual del juego
+        estado_por_defecto (str): Estado por defecto si no existe el actual
+    
+    Returns:
+        pygame.Surface: El fondo a mostrar
+    
+    Raises:
+        ValueError: Si el estado por defecto no existe
+    """
+    # Verificar que el estado por defecto existe
+    if estado_por_defecto not in fondos_cargados:
+        raise ValueError(f"❌ Estado por defecto '{estado_por_defecto}' no está en fondos_cargados")
+    
+    # Si el estado actual existe, devolverlo
+    if estado_actual in fondos_cargados:
+        return fondos_cargados[estado_actual]
+    
+    # Si no existe, devolver el por defecto y avisar
+    print(f"⚠️  Estado '{estado_actual}' no tiene fondo, usando '{estado_por_defecto}'")
+    return fondos_cargados[estado_por_defecto]
 
 

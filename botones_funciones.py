@@ -98,10 +98,3 @@ def dibujar_botones(pantalla, fuente, diccionario_botones):
         texto_surface = fuente.render(boton_data['texto'], True, (255, 255, 255))
         texto_rect = texto_surface.get_rect(center=boton_data['rect'].center)
         pantalla.blit(texto_surface, texto_rect)
-
-'''
-def _verificar_colision_y_clic(rect, mouse_pos, eventos):
-    """Verifica solo colisión (la lógica de clic ahora está en procesar_botones)"""
-    tiene_colision = rect.collidepoint(mouse_pos)
-    return tiene_colision
-'''

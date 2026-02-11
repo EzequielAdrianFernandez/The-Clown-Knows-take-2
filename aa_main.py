@@ -10,9 +10,12 @@ from manejador_estados import (
     actualizar_estado_completo,
     dibujar_estado_actual,
     cargar_fuentes,
+    obtener_fondo_actual
 )
 from menu_definiciones import FONDOS  # Importar los fondos
 from y_musica import musica_inicializar, dibujar_musica_pantalla , musica_actualizar_completo #funciones de musica
+
+
 
 def main():
     # Configuración
@@ -60,11 +63,11 @@ def main():
         #Actualizar música (con el estado YA actualizado)
         estado_juego = musica_actualizar_completo(eventos, estado_juego, forzar_actualizacion=True)
         
-        # Obtener fondo actual basado en el estado ACTUALIZADO
+        # Obtener fondo actual (ahora sin .get())
         estado_actual = estado_juego['estado_actual']
-        fondo_actual = fondos_cargados.get(estado_actual, fondos_cargados["menu_principal"])###################################################################MARCADOR DE GET
+        fondo_actual = obtener_fondo_actual(fondos_cargados, estado_actual)
         
-        # Dibujar fondo correspondiente al estado actual
+        # Dibujar fondo
         pantalla.blit(fondo_actual, (0, 0))
         
         # Dibujar controles de música en pantalla

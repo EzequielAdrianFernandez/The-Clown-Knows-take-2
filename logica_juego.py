@@ -213,35 +213,43 @@ def crear_nuevo_usuario(usuarios, nombre_usuario):
 
 def actualizar_estadisticas_usuario(usuarios, usuario_id, config):
     """Actualiza las estadísticas del usuario después de una partida"""
-    if usuario_id in usuarios:
-        usuario = usuarios[usuario_id]
-        
-        # Actualizar tickets totales
-        usuario["total_boletos"] += config["tickets_conseguidos"]
-        
-        # Actualizar record si es mayor
-        if config["tickets_conseguidos"] > usuario["record_boletos"]:
-            usuario["record_boletos"] = config["tickets_conseguidos"]
-        
-        # Actualizar tiempo promedio
-        tiempo_actual = config.get("tiempo_partida", 0)###################################################################MARCADOR DE GET
-        partidas_anteriores = usuario["partidas_jugadas"]
-        promedio_anterior = usuario["tiempo_promedio"]
-        
-        if partidas_anteriores > 0:
-            tiempo_total_anterior = promedio_anterior * partidas_anteriores
-            nuevo_tiempo_total = tiempo_total_anterior + tiempo_actual
-            usuario["tiempo_promedio"] = nuevo_tiempo_total / (partidas_anteriores + 1)
-        else:
-            usuario["tiempo_promedio"] = tiempo_actual
-        
-        # Incrementar partidas jugadas
-        usuario["partidas_jugadas"] += 1
-        
-        # Asignar medallas basadas en logros
-        usuario["medallas"] = calcular_medallas(usuario)
-        
-        guardar_json("z_usuarios.json", usuarios)
+    if usuario_id not in usuarios:
+        raise KeyError(f"❌ Usuario '{usuario_id}' no existe")
+    
+    usuario = usuarios[usuario_id]
+    
+    # Actualizar tickets totales
+    usuario["total_boletos"] += config["tickets_conseguidos"]
+    
+    # Actualizar record si es mayor
+    if config["tickets_conseguidos"] > usuario["record_boletos"]:
+        usuario["record_boletos"] = config["tickets_conseguidos"]
+    
+    # Obtener tiempo de forma robusta (sin .get())
+    try:
+        tiempo_actual = obtener_tiempo_partida(config)
+    except ValueError as e:
+        print(f"⚠️  {e} - usando 0")
+        tiempo_actual = 0
+    
+    partidas_anteriores = usuario["partidas_jugadas"]
+    promedio_anterior = usuario["tiempo_promedio"]
+    
+    # Actualizar tiempo promedio
+    if partidas_anteriores > 0:
+        tiempo_total_anterior = promedio_anterior * partidas_anteriores
+        nuevo_tiempo_total = tiempo_total_anterior + tiempo_actual
+        usuario["tiempo_promedio"] = nuevo_tiempo_total / (partidas_anteriores + 1)
+    else:
+        usuario["tiempo_promedio"] = tiempo_actual
+    
+    # Incrementar partidas jugadas
+    usuario["partidas_jugadas"] += 1
+    
+    # Asignar medallas basadas en logros
+    usuario["medallas"] = calcular_medallas(usuario)
+    
+    guardar_json("z_usuarios.json", usuarios)
 
 def calcular_medallas(usuario):
     """Calcula las medallas del usuario basado en sus logros"""
@@ -519,3 +527,34 @@ def crear_usuario_y_guardar(estado, menu_principal):
     print(f"✅ Usuario '{estado['usuarios'][usuario_id]['nombre']}' creado y seleccionado")
     return estado
 
+def obtener_tiempo_partida(config, valor_por_defecto=0):
+    """
+    Obtiene el tiempo de partida de forma segura.
+    Garantiza que retorna un número válido.
+    
+    Args:
+        config (dict): Configuración/estadísticas del juego
+        valor_por_defecto (float): Valor por defecto si no existe o es inválido
+    
+    Returns:
+        float: Tiempo de la partida en segundos
+    
+    Raises:
+        ValueError: Si el tiempo no es un número válido
+    """
+    # Verificar que la clave existe
+    if 'tiempo_partida' not in config:
+        print(f"⚠️  'tiempo_partida' no existe en config, usando valor por defecto: {valor_por_defecto}")
+        return valor_por_defecto
+    
+    tiempo = config['tiempo_partida']
+    
+    # Validar que es un número
+    if not isinstance(tiempo, (int, float)):
+        raise ValueError(f"❌ 'tiempo_partida' debe ser número, recibido: {type(tiempo).__name__}")
+    
+    # Validar que es positivo
+    if tiempo < 0:
+        raise ValueError(f"❌ 'tiempo_partida' no puede ser negativo: {tiempo}")
+    
+    return tiempo
