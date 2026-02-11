@@ -837,7 +837,6 @@ def manejar_logica_estado_actual(estado, botones_presionados, eventos):
                         boton_procesado = True
 
         case "laberinto_juego":
-            # QUICK FIX: Permitir salir al menú principal desde el juego del laberinto
             if 'boton_salir_juego' in botones_presionados:
                 estado['estado_actual'] = "menu_principal"
                 estado['diccionario_botones_actual'] = MENU_PRINCIPAL

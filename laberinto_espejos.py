@@ -108,11 +108,22 @@ def crear_laberinto(filas, columnas,dificultad="facil", intentos_max=80):
 def iniciar_juego_laberinto(pantalla, fuente, estado_juego, filas=10, columnas=15):
     # === AGREGAR ESTO AL INICIO ===
     from y_musica import musica_cargar_y_reproducir, musica_actualizar_volumen
-    
+    from menu_definiciones import MENU_LABERINTO_RESULTADO
+    from botones_funciones import inicializar_botones_laberinto
     # Cargar música del laberinto
     volumen = 0.5
     if 'musica_volumen' in estado_juego:
         volumen = estado_juego['musica_volumen']
+    
+    if 'musica_mute' in estado_juego and estado_juego['musica_mute']:
+        volumen = 0.0
+    
+    print("🎵 Iniciando música del laberinto...")
+    exito = musica_cargar_y_reproducir('laberinto_espejos', volumen)
+    
+    if not exito:
+        print("⚠️ No se encontró laberinto_espejos, intentando con alternativa...")
+        musica_cargar_y_reproducir('electro_swing', volumen)
     
     # Verificar si estamos muteados
     if 'musica_mute' in estado_juego and estado_juego['musica_mute']:
@@ -264,6 +275,7 @@ def iniciar_juego_laberinto(pantalla, fuente, estado_juego, filas=10, columnas=1
     estado_juego['laberinto_tickets_ganados'] = 0
     estado_juego['laberinto_tiempo_final'] = 0
     estado_juego['laberinto_mensaje_resultado'] = "Juego finalizado"
+    estado_juego['diccionario_botones_laberinto'] = inicializar_botones_laberinto(MENU_LABERINTO_RESULTADO)
     return "laberinto_resultado", estado_juego
 
 def dibujar_laberinto(pantalla, fuente, laberinto, jugador_pos, tiempo_restante, modo_resolver=False, solucion=None):
@@ -314,14 +326,10 @@ def dibujar_laberinto(pantalla, fuente, laberinto, jugador_pos, tiempo_restante,
             # Dibujar contenido de celda
             if laberinto[fila][columna] == '/':
                 # Dibujar espejo /
-                pygame.draw.line(pantalla, COLOR_ESPEO, 
-                               (x + 5, y + CELDA_SIZE - 5), 
-                               (x + CELDA_SIZE - 5, y + 5), 3)
+                pygame.draw.line(pantalla, COLOR_ESPEO, (x + 5, y + CELDA_SIZE - 5), (x + CELDA_SIZE - 5, y + 5), 3)
             elif laberinto[fila][columna] == '\\':
                 # Dibujar espejo \
-                pygame.draw.line(pantalla, COLOR_ESPEO, 
-                               (x + 5, y + 5), 
-                               (x + CELDA_SIZE - 5, y + CELDA_SIZE - 5), 3)
+                pygame.draw.line(pantalla, COLOR_ESPEO, (x + 5, y + 5), (x + CELDA_SIZE - 5, y + CELDA_SIZE - 5), 3)
             elif laberinto[fila][columna] == 'E':
                 texto = fuente.render("E", True, (255, 255, 255))
                 pantalla.blit(texto, (x + 15, y + 10))
