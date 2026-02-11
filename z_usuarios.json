@@ -2,18 +2,18 @@
     "usuario_1": {
         "nombre": "pachacho",
         "record_boletos": 240,
-        "total_boletos": 3844,
+        "total_boletos": 3784,
         "partidas_jugadas": 38,
         "tiempo_promedio": 15.928755910773024,
-        "medallas": "🎮🏆👑💰⚡"
+        "medallas": "🎮🏆👑💰⚡💡🌟"
     },
     "usuario_2": {
         "nombre": "pachacha",
-        "record_boletos": 23,
-        "total_boletos": 280,
-        "partidas_jugadas": 21,
-        "tiempo_promedio": 1.2498651232038225,
-        "medallas": "🎮⚡"
+        "record_boletos": 140,
+        "total_boletos": 440,
+        "partidas_jugadas": 23,
+        "tiempo_promedio": 1.8982828389043394,
+        "medallas": "🎮👑⚡"
     },
     "usuario_3": {
         "nombre": "pachachi",

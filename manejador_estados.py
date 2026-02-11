@@ -495,38 +495,36 @@ def manejar_logica_estado_actual(estado, botones_presionados, eventos):
                     estado['tiempo_transcurrido'] = time.time() - estado['tiempo_inicio']
                     estado['estado_actual'] = "juego_resultado_final"
                     estado['diccionario_botones_actual'] = MENU_RESULTADO_FINAL
-            
             for boton_id in botones_presionados:
-                if boton_id.startswith('boton_opcion_'):
-                    opcion_map = {'boton_opcion_1': 0, 'boton_opcion_2': 1, 'boton_opcion_3': 2, 'boton_opcion_4': 3}
-                    opcion_seleccionada = opcion_map[boton_id]
+                match boton_id:
+                    case 'boton_opcion_1' | 'boton_opcion_2' | 'boton_opcion_3' | 'boton_opcion_4':
+                        opcion_map = {'boton_opcion_1': 0, 'boton_opcion_2': 1, 'boton_opcion_3': 2, 'boton_opcion_4': 3}
+                        opcion_seleccionada = opcion_map[boton_id]
+                        
+                        config = estado['configuraciones']
+                        verificar_respuesta(config, opcion_seleccionada)
+                        acreditar_tickets_ronda(config)
+                        remover_pregunta_usada(estado['preguntas_multiple'], config)
+                        
+                        estado['texto_resultado'] = f"{config['mensaje']}"
+                        estado['texto_tickets_ganados'] = f"Tickets ganados: {config['tickets_ronda']}"
+                        estado['opcion_seleccionada'] = opcion_seleccionada
+                        estado['respuesta_correcta'] = config["verdadera"]
+                        estado['respuesta_seleccionada'] = config["respuestas"][opcion_seleccionada]
+                        
+                        estado['pregunta_preparada'] = False
+                        estado['mostrando_resultado_ronda'] = True
+                        
+                        estado['estado_actual'] = "juego_resultado_ronda"
+                        estado['diccionario_botones_actual'] = MENU_RESULTADO_RONDA
                     
-                    config = estado['configuraciones']
-                    verificar_respuesta(config, opcion_seleccionada)
-                    acreditar_tickets_ronda(config)
-                    remover_pregunta_usada(estado['preguntas_multiple'], config)
-                    
-                    estado['texto_resultado'] = f"{config['mensaje']}"
-                    estado['texto_tickets_ganados'] = f"Tickets ganados: {config['tickets_ronda']}"
-                    estado['opcion_seleccionada'] = opcion_seleccionada
-                    estado['respuesta_correcta'] = config["verdadera"]
-                    estado['respuesta_seleccionada'] = config["respuestas"][opcion_seleccionada]
-                    
-                    estado['pregunta_preparada'] = False
-                    estado['mostrando_resultado_ronda'] = True
-                    
-                    estado['estado_actual'] = "juego_resultado_ronda"
-                    estado['diccionario_botones_actual'] = MENU_RESULTADO_RONDA
-                    break
-
-                #QUICK FIX:salir al menu principal desde el juego
-                if 'boton_salir_juego' in botones_presionados:
-                    estado['estado_actual'] = "menu_principal"
-                    estado['diccionario_botones_actual'] = MENU_PRINCIPAL
-                    estado['juego_iniciado'] = False
-                    estado['ronda_actual'] = 1
-                    estado['modo_juego'] = None
-                    estado['pregunta_preparada'] = False
+                    case 'boton_salir_juego':
+                        estado['estado_actual'] = "menu_principal"
+                        estado['diccionario_botones_actual'] = MENU_PRINCIPAL
+                        estado['juego_iniciado'] = False
+                        estado['ronda_actual'] = 1
+                        estado['modo_juego'] = None
+                        estado['pregunta_preparada'] = False
 
         case "juego_resultado_ronda":
             # Lógica para el botón continuar en Multiple Choice
@@ -588,34 +586,54 @@ def manejar_logica_estado_actual(estado, botones_presionados, eventos):
                     estado['diccionario_botones_actual'] = MENU_RESULTADO_FINAL_VoF
             
             for boton_id in botones_presionados:
-                if boton_id in ['boton_verdadero', 'boton_falso']:
-                    opcion_seleccionada = "verdadero" if boton_id == 'boton_verdadero' else "falso"
+                match boton_id:
+                    case 'boton_verdadero':
+                        opcion_seleccionada = "verdadero"
+                        
+                        config = estado['configuraciones']
+                        verificar_respuesta_VoF(config, opcion_seleccionada)
+                        acreditar_tickets_ronda(config)
+                        remover_pregunta_usada_VoF(estado['preguntas_VoF'], config)
+                        
+                        estado['texto_resultado'] = f"{config['mensaje']}"
+                        estado['texto_tickets_ganados'] = f"Tickets ganados: {config['tickets_ronda']}"
+                        estado['opcion_seleccionada'] = opcion_seleccionada
+                        estado['respuesta_correcta'] = config["verdadera"]
+                        estado['respuesta_seleccionada'] = opcion_seleccionada
+                        
+                        estado['pregunta_preparada'] = False
+                        estado['mostrando_resultado_ronda'] = True
+                        
+                        estado['estado_actual'] = "juego_resultado_ronda_VoF"
+                        estado['diccionario_botones_actual'] = MENU_RESULTADO_RONDA_VoF
                     
-                    config = estado['configuraciones']
-                    verificar_respuesta_VoF(config, opcion_seleccionada)
-                    acreditar_tickets_ronda(config)
-                    remover_pregunta_usada_VoF(estado['preguntas_VoF'], config)  # ← CAMBIADO
+                    case 'boton_falso':
+                        opcion_seleccionada = "falso"
+                        
+                        config = estado['configuraciones']
+                        verificar_respuesta_VoF(config, opcion_seleccionada)
+                        acreditar_tickets_ronda(config)
+                        remover_pregunta_usada_VoF(estado['preguntas_VoF'], config)
+                        
+                        estado['texto_resultado'] = f"{config['mensaje']}"
+                        estado['texto_tickets_ganados'] = f"Tickets ganados: {config['tickets_ronda']}"
+                        estado['opcion_seleccionada'] = opcion_seleccionada
+                        estado['respuesta_correcta'] = config["verdadera"]
+                        estado['respuesta_seleccionada'] = opcion_seleccionada
+                        
+                        estado['pregunta_preparada'] = False
+                        estado['mostrando_resultado_ronda'] = True
+                        
+                        estado['estado_actual'] = "juego_resultado_ronda_VoF"
+                        estado['diccionario_botones_actual'] = MENU_RESULTADO_RONDA_VoF
                     
-                    estado['texto_resultado'] = f"{config['mensaje']}"
-                    estado['texto_tickets_ganados'] = f"Tickets ganados: {config['tickets_ronda']}"
-                    estado['opcion_seleccionada'] = opcion_seleccionada
-                    estado['respuesta_correcta'] = config["verdadera"]
-                    estado['respuesta_seleccionada'] = opcion_seleccionada
-                    
-                    estado['pregunta_preparada'] = False
-                    estado['mostrando_resultado_ronda'] = True
-                    
-                    estado['estado_actual'] = "juego_resultado_ronda_VoF"
-                    estado['diccionario_botones_actual'] = MENU_RESULTADO_RONDA_VoF
-                    break
-                #QUICK FIX:salir al menu principal desde el juego VoF
-                if 'boton_salir_juego' in botones_presionados:
-                    estado['estado_actual'] = "menu_principal"
-                    estado['diccionario_botones_actual'] = MENU_PRINCIPAL
-                    estado['juego_iniciado'] = False
-                    estado['ronda_actual'] = 1
-                    estado['modo_juego'] = None
-                    estado['pregunta_preparada'] = False
+                    case 'boton_salir_juego':
+                        estado['estado_actual'] = "menu_principal"
+                        estado['diccionario_botones_actual'] = MENU_PRINCIPAL
+                        estado['juego_iniciado'] = False
+                        estado['ronda_actual'] = 1
+                        estado['modo_juego'] = None
+                        estado['pregunta_preparada'] = False
 
         case "juego_resultado_ronda_VoF":
             # NUEVO: Resultado de ronda para VoF
@@ -683,28 +701,30 @@ def manejar_logica_estado_actual(estado, botones_presionados, eventos):
 
         case "seleccion_usuario":
             # Manejar selección de usuario existente o slot vacío
-            for i in range(1, 11):
-                boton_id = f'boton_usuario_{i}'
-                if boton_id in botones_presionados:
-                    usuario_id = f'usuario_{i}'
-                    if usuario_id in estado['usuarios']:
-                        # Usuario existe, seleccionarlo
-                        estado['usuario_actual'] = usuario_id
+            for boton_id in botones_presionados:
+                match boton_id:
+                    case 'boton_usuario_1' | 'boton_usuario_2' | 'boton_usuario_3' | 'boton_usuario_4' | 'boton_usuario_5' | 'boton_usuario_6' | 'boton_usuario_7' | 'boton_usuario_8' | 'boton_usuario_9' | 'boton_usuario_10':
+                        # Extraer número del botón
+                        numero_slot = int(boton_id.split('_')[2])
+                        usuario_id = f'usuario_{numero_slot}'
+                        
+                        if usuario_id in estado['usuarios']:
+                            # Usuario existe, seleccionarlo
+                            estado['usuario_actual'] = usuario_id
+                            estado['estado_actual'] = "menu_principal"
+                            estado['diccionario_botones_actual'] = MENU_PRINCIPAL
+                            print(f"✅ Usuario seleccionado: {estado['usuarios'][usuario_id]['nombre']}")
+                        else:
+                            # Slot vacío, ir a crear usuario
+                            estado['slot_seleccionado'] = numero_slot
+                            estado['nombre_nuevo_usuario'] = ""
+                            estado['estado_actual'] = "crear_usuario"
+                            estado['diccionario_botones_actual'] = MENU_CREAR_USUARIO
+                            print(f"📝 Creando usuario en slot {numero_slot}")
+                    
+                    case 'boton_volver':
                         estado['estado_actual'] = "menu_principal"
                         estado['diccionario_botones_actual'] = MENU_PRINCIPAL
-                        print(f"✅ Usuario seleccionado: {estado['usuarios'][usuario_id]['nombre']}")
-                    else:
-                        # Slot vacío, ir DIRECTAMENTE a crear usuario
-                        estado['slot_seleccionado'] = i
-                        estado['nombre_nuevo_usuario'] = ""  # Resetear nombre
-                        estado['estado_actual'] = "crear_usuario"
-                        estado['diccionario_botones_actual'] = MENU_CREAR_USUARIO
-                        print(f"📝 Creando usuario en slot {i}")
-                    break
-            
-            if 'boton_volver' in botones_presionados:
-                estado['estado_actual'] = "menu_principal"
-                estado['diccionario_botones_actual'] = MENU_PRINCIPAL
 
         case "crear_usuario":
             # Importar la función aquí
@@ -900,25 +920,30 @@ def manejar_logica_estado_actual(estado, botones_presionados, eventos):
                     
                     # Botones dinámicos de medallas
                     for boton_id in botones_presionados:
-                        if boton_id.startswith('boton_medalla_'):
-                            emoji = boton_id.replace('boton_medalla_', '')
+                        # Verificar si es un botón de medalla usando el diccionario de botones actual
+                        if boton_id in estado['diccionario_botones_actual']:
+                            boton_data = estado['diccionario_botones_actual'][boton_id]
                             
-                            if estado['usuario_actual']:
-                                from tienda_medallas import comprar_medalla, MEDALLAS_TIENDA
+                            # Verificar si tiene metadato 'emoji' (es un botón de medalla)
+                            if 'emoji' in boton_data:
+                                emoji = boton_data['emoji']
                                 
-                                if emoji in MEDALLAS_TIENDA:
-                                    exito, mensaje, tickets_restantes = comprar_medalla(
-                                        estado['usuarios'], 
-                                        estado['usuario_actual'], 
-                                        emoji
-                                    )
-                                    estado['tienda_mensaje'] = mensaje
-                                    estado['tienda_exito'] = exito
-                                    estado['tienda_medalla_seleccionada'] = emoji
+                                if estado['usuario_actual']:
+                                    from tienda_medallas import comprar_medalla, MEDALLAS_TIENDA
                                     
-                                    # ACTUALIZAR BOTONES después de compra exitosa
-                                    if exito:
-                                        estado['diccionario_botones_actual'] = crear_botones_tienda_dinamicos(estado)
+                                    if emoji in MEDALLAS_TIENDA:
+                                        exito, mensaje, tickets_restantes = comprar_medalla(
+                                            estado['usuarios'], 
+                                            estado['usuario_actual'], 
+                                            emoji
+                                        )
+                                        estado['tienda_mensaje'] = mensaje
+                                        estado['tienda_exito'] = exito
+                                        estado['tienda_medalla_seleccionada'] = emoji
+                                        
+                                        # ACTUALIZAR BOTONES después de compra exitosa
+                                        if exito:
+                                            estado['diccionario_botones_actual'] = crear_botones_tienda_dinamicos(estado)
 
         case "leaderboard":
             if 'boton_volver' in botones_presionados:
@@ -956,19 +981,17 @@ def crear_botones_tienda_dinamicos(estado):
     # Obtener medallas que el usuario NO tiene
     medallas_disponibles = obtener_medallas_disponibles(usuario["medallas"])
     
-    # Si no hay medallas disponibles, mostrar mensaje
     if not medallas_disponibles:
-        # Podrías agregar un botón especial o mensaje
         return botones_tienda
     
     # CONFIGURACIÓN MINIMALISTA - BOTONES PEQUEÑOS
-    COLUMNAS = 4  # columnas
-    ANCHO_BOTON = 200  # ANCHO
-    ALTO_BOTON = 80    # Más compacto
+    COLUMNAS = 4
+    ANCHO_BOTON = 200
+    ALTO_BOTON = 80
     ESPACIO_X = 10
     ESPACIO_Y = 10
-    X_INICIO = 100     # punto de inicio del primer botón Horizontal
-    Y_INICIO = 250     # punto de inicio del primer botón Vertical
+    X_INICIO = 100
+    Y_INICIO = 250
     
     # Crear botones para cada medalla disponible
     for i, (emoji, datos_medalla) in enumerate(medallas_disponibles):
@@ -982,10 +1005,8 @@ def crear_botones_tienda_dinamicos(estado):
         puede_comprar = usuario["total_boletos"] >= datos_medalla["precio"]
         color = (100, 180, 100) if puede_comprar else (180, 100, 100)
         
-        # TEXTO MINIMALISTA: solo emoji y precio
-        texto_boton = f"{emoji}\n{datos_medalla['precio']}"  # Solo emoji y precio
+        texto_boton = f"{emoji}\n{datos_medalla['precio']}"
         
-        # Crear ID único para el botón
         boton_id = f'boton_medalla_{emoji}'
         
         botones_tienda[boton_id] = {
@@ -995,7 +1016,8 @@ def crear_botones_tienda_dinamicos(estado):
             'alto': ALTO_BOTON,
             'texto': texto_boton,
             'color_normal': color,
-            'presionado': False
+            'presionado': False,
+            'emoji': emoji  # ← AGREGAR ESTE METADATO
         }
     
     return botones_tienda
