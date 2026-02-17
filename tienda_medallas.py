@@ -1,34 +1,3 @@
-"""
-🏪 MÓDULO: tienda_medallas.py
-==============================
-SISTEMA DE TIENDA Y MEDALLAS DEL JUEGO.
-
-¿QUÉ HACE ESTE MÓDULO?
-----------------------------------------------------------------------------
-1. 🎁 CATÁLOGO DE MEDALLAS → 15 medallas con emoji, nombre, precio y descripción
-2. 💰 COMPRA DE MEDALLAS   → Verifica tickets, resta precio, agrega emoji al usuario
-3. 📊 GESTIÓN DE INVENTARIO → Qué medallas tiene/cómo comprar/estado de la tienda
-4. 🔍 VALIDACIONES        → Verifica si puede comprar, si ya la tiene, si existe
-
-ESTRUCTURA DE DATOS:
-----------------------------------------------------------------------------
-MEDALLAS_TIENDA = {
-    "🏆": {
-        "nombre": "Trofeo Dorado",
-        "precio": 200,
-        "descripcion": "Trofeo de campeón"
-    },
-    ... (15 medallas)
-}
-
-FLUJO DE COMPRA (desde manejador_estados.py):
-----------------------------------------------------------------------------
-1. crear_botones_tienda_dinamicos() → Genera botones según medallas disponibles
-2. usuario hace clic en botón con emoji
-3. comprar_medalla() → Valida, resta tickets, agrega medalla, guarda JSON
-4. Se actualiza la tienda (botones desaparecen si ya no hay tickets/medallas)
-"""
-
 import json
 from logica_juego import guardar_json
 

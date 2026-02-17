@@ -1,6 +1,3 @@
-#menu_definiciones.py
-
-
 # Definiciones de los fondos para cada estado del juego #
 FONDOS = {
     "menu_principal": "imagenes/menu_principal.png",
@@ -57,7 +54,6 @@ MENU_CREAR_USUARIO = {
 # Menús para el modo Opciones #
 MENU_OPCIONES = {
     'boton_sonido': {'x': 280, 'y': 200, 'ancho': 200, 'alto': 100, 'texto': 'SONIDO: ON', 'color_normal': (100, 180, 100)},
-    'boton_video': {'x': 520, 'y': 200, 'ancho': 200, 'alto': 100, 'texto': 'VIDEO', 'color_normal': (70, 130, 180)},
     'boton_volver': {'x': 400, 'y': 350, 'ancho': 200, 'alto': 50, 'texto': 'VOLVER', 'color_normal': (180, 70, 70)}
 }
 

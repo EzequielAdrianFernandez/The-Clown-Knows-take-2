@@ -1,11 +1,6 @@
 import pygame
 import sys
 
-"""
-Módulo para las acciones de los botones
-Cada función representa una acción específica a ejecutar
-"""
-
 def salir_del_juego():
     """Acción para el botón salir - cierra el juego completamente"""
     print("Saliendo del juego...")

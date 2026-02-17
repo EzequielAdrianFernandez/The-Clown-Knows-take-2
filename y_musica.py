@@ -1,11 +1,13 @@
-# y_musica.py
 import pygame
 import os
 from logica_juego import guardar_json
 
 def musica_inicializar():
     """Inicializa el sistema de audio de pygame"""
-    pygame.mixer.init()
+    try:
+        pygame.mixer.init()
+    except pygame.error as e:
+        print(f"❌ Error al inicializar el sistema de audio: {e}")
 
 def musica_cargar_y_reproducir(nombre_archivo, volumen=0.5):
     """
@@ -34,7 +36,10 @@ def musica_cargar_y_reproducir(nombre_archivo, volumen=0.5):
         return False
 
 def musica_actualizar_volumen(volumen):
-    pygame.mixer.music.set_volume(volumen)
+    try:
+        pygame.mixer.music.set_volume(volumen)
+    except Exception as e:
+        print(f"❌ Error al actualizar volumen: {e}")
 
 def guardar_configuracion_audio(configuraciones, estado_audio):
     """
@@ -43,7 +48,6 @@ def guardar_configuracion_audio(configuraciones, estado_audio):
     """
     configuraciones["audio_mute"] = estado_audio["mute"]
     configuraciones["audio_volumen"] = estado_audio["volumen"]
-    # NO guardar "audio_reproduciendo"
     
     guardar_json("z_configuraciones.json", configuraciones)
     print(f"💾 Audio guardado: mute={estado_audio['mute']}, vol={estado_audio['volumen']}")
@@ -64,7 +68,7 @@ def toggle_mute_con_guardado(estado):
         musica_actualizar_volumen(nuevo_estado['musica_volumen'])
         print("🔊 UNMUTE activado")
     
-    # Guardar configuración (SOLO mute y volumen)
+    # Guardar configuración
     estado_audio = {
         "mute": nuevo_estado['musica_mute'],
         "volumen": nuevo_estado['musica_volumen']

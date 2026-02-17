@@ -1,23 +1,3 @@
-"""
-🏆 MÓDULO: leaderboard.py
-==========================
-Gestiona la obtención y visualización de las tablas de clasificación.
-
-FUNCIONES PRINCIPALES:
-1. obtener_leaderboard_record()  → Ranking por MEJOR PARTIDA INDIVIDUAL (record_boletos)
-2. obtener_leaderboard_total()   → Ranking por TOTAL ACUMULADO (total_boletos)
-3. dibujar_leaderboard_organizado() → Renderiza ambos rankings en pantalla
-
-FLUJO DE DATOS:
-manejador_estados.py (caso "leaderboard")
-        ↓
-dibujar_leaderboard_organizado()
-        ↓
-obtener_leaderboard_record()  →  ordena por record_boletos (mayor a menor)
-obtener_leaderboard_total()   →  ordena por total_boletos (mayor a menor)
-        ↓
-dibujar_texto_centrado() / dibujar_texto()  ← desde manejador_estados
-"""
 
 def obtener_leaderboard_record(usuarios, limite=10):
     """

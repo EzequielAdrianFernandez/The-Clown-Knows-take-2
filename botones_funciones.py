@@ -1,15 +1,5 @@
 import pygame
 
-"""
-🎨 MÓDULO: botones_funciones.py
-================================
-Gestiona la creación, procesamiento y dibujado de botones interactivos.
-
-Flujo principal:
-1. procesar_botones()  → detecta clicks, calcula hover, actualiza estado
-2. dibujar_botones()   → renderiza los botones en pantalla con colores actualizados
-"""
-
 def _calcular_color_hover(color_normal):
     """
     🎨 Calcula un color más claro u oscuro para el efecto hover.

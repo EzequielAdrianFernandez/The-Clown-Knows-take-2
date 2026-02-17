@@ -1,20 +1,3 @@
-"""
-🗺️ MÓDULO: laberintos_predeterminados.py
-=========================================
-Contiene mapas de laberintos manuales y prediseñados.
-
-PROPÓSITO:
-- Son la RED DE SEGURIDAD cuando la generación aleatoria falla
-- Están garantizados para ser resolubles
-- Cada dificultad tiene un diseño específico y probado
-- Ajustan sus dimensiones según parámetros pero mantienen estructura base
-
-FLUJO:
-1. crear_laberinto() en laberinto_espejos.py intenta generar mapa aleatorio
-2. Si falla tras varios intentos → llama a obtener_laberinto_manual()
-3. Esta función devuelve un mapa fijo según dificultad
-4. El mapa se recorta a las dimensiones solicitadas si es necesario
-"""
 
 def obtener_laberinto_manual(dificultad, filas, columnas):
     """
@@ -134,26 +117,3 @@ def obtener_laberinto_manual(dificultad, filas, columnas):
         print(f"⚠️ Dificultad '{dificultad}' no reconocida, usando mapa fácil")
         return obtener_laberinto_manual('facil', filas, columnas)
 
-
-"""
-📐 NOTA SOBRE DIMENSIONES:
----------------------------
-Los mapas prediseñados tienen dimensiones FIJAS:
-- Fácil   : 10×15
-- Medio   : 10×20  
-- Difícil : 13×25
-- Deathrow: 14×25
-
-En laberinto_espejos.py, la función crear_laberinto() puede pedir 
-dimensiones diferentes (ej: deathrow pide 12×22). 
-El mapa se RECORTARÁ automáticamente para ajustarse a lo solicitado.
-
-Esto está bien porque:
-1. La entrada E siempre está en (0,0)
-2. La salida S siempre está en la última fila/columna
-3. El camino principal suele estar en las primeras filas/columnas
-4. Las celdas que sobran se ignoran
-
-Si en el futuro quieres mapas EXACTOS para cada dificultad,
-puedes modificar menu_definiciones.py para que coincidan las dimensiones.
-"""

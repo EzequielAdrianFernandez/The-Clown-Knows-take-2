@@ -1,20 +1,4 @@
-"""
-🪞 MÓDULO: laberinto_espejos.py
-================================
-Gestiona el minijuego del laberinto con espejos.
 
-FLUJO PRINCIPAL:
-1. iniciar_juego_laberinto()  → Punto de entrada. Configura música, dimensiones y lanza el bucle
-2. crear_laberinto()          → Genera o carga un laberinto válido con entrada/salida
-3. Bucle principal           → Procesa movimiento, espejos, tiempo y condiciones de victoria/derrota
-4. dibujar_laberinto()       → Renderiza celdas, espejos, jugador y solución
-5. resolver_laberinto()      → Algoritmo recursivo que encuentra el camino (presionando R)
-
-DEPENDENCIAS:
-- laberintos_predeterminados.py → Mapas manuales por si falla la generación aleatoria
-- y_musica.py                 → Control de música específica del laberinto
-- botones_funciones.py        → Procesa botón "VOLVER" en pantalla de instrucciones
-"""
 
 import random
 import time

@@ -1,42 +1,3 @@
-"""
-🎮 MÓDULO: logica_juego.py
-===========================
-CORAZÓN DE LA LÓGICA DEL JUEGO - VERSIÓN LIMPIA (SIN DUPLICADOS)
-
-¿QUÉ HACE ESTE MÓDULO?
-----------------------------------------------------------------------------
-1. 📂 CARGA DE DATOS: preguntas (CSV), configuraciones (JSON), usuarios (JSON)
-2. ❓ LÓGICA DE PREGUNTAS: selección, verificación, remoción, randomización
-3. 💰 SISTEMA DE TICKETS: acreditación por ronda y dificultad
-4. 👤 GESTIÓN DE USUARIOS: creación, actualización de estadísticas, medallas
-5. 🎮 MÚLTIPLES MODOS: Multiple Choice y Verdadero/Falso con reglas propias
-
-ESTRUCTURA DE DATOS PRINCIPAL (config):
-----------------------------------------------------------------------------
-Es un diccionario enorme que guarda TODO el estado de la partida actual:
-- aciertos/fallas       → Contadores de respuestas
-- tickets_*            → Tickets en juego, conseguidos, por ronda
-- dificultad/categoría → De la pregunta actual
-- pregunta/respuestas  → Datos de la pregunta activa
-- tiempo_partida       → Tiempo total de la partida
-
-FLUJO TÍPICO (Multiple Choice):
-----------------------------------------------------------------------------
-1. reestablecer_configuraciones() → Limpia partida anterior
-2. determinar_dificultad_y_tickets() → Según ronda (1-3: fácil, 4-6: medio, 7+: difícil)
-3. seleccionar_pregunta() → Elige aleatoria según categoría y dificultad
-4. randomizar_respuestas() → Mezcla correcta + incorrectas
-5. verificar_respuesta()   → Compara con índice seleccionado
-6. acreditar_tickets_ronda() → Suma tickets si corresponde
-7. remover_pregunta_usada() → Elimina para no repetir
-8. actualizar_estadisticas_usuario() → Al terminar las 10 rondas
-
-DEPENDENCIAS:
-----------------------------------------------------------------------------
-- random, json, csv, time → Librerías estándar
-- menu_definiciones.py    → Solo MENU_PRINCIPAL (para volver)
-"""
-
 import random
 import json
 import csv
@@ -476,7 +437,6 @@ def verificar_respuesta_VoF(config, opcion_seleccionada):
         config["tickets_ronda"] = 0
 
     config["contesto"] = True
-
 
 # ============================================================================
 # 👤 GESTIÓN DE USUARIOS Y ESTADÍSTICAS
